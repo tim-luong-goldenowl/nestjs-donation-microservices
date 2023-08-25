@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package donationReceiver;
+
+service UsersService {
+  rpc FindOneByUser(UserId) returns (DonationReceiver) {}
+}
+
+message UserId {
+  int64 userId = 1;
+}
+
+message DonationReceivers {
+  repeated DonationReceiver donationReceivers = 1;
+}
+
+message DonationReceiver {
+  int64 id = 1;
+  string email = 2;
+  string businessName = 3;
+  string companyName = 4;
+  string country = 5;
+  string bio = 6;
+  string onboardingCompleteToken = 7;
+  string avatarUrl = 8;
+  bool verified = 9;
+  string stripeConnectedAccountId = 10;
+}

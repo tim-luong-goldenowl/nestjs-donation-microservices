@@ -1,15 +1,17 @@
 import { Module } from '@nestjs/common';
-import { RepositoryServiceController } from './repository-service.controller';
-import { RepositoryServiceService } from './repository-service.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { appDatasourceOptions } from './typeorm.config';
+import { UsersModule } from './users/users.module';
+import { DonationReceiversModule } from './donation-receivers/donation-receivers.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(appDatasourceOptions)
+    TypeOrmModule.forRoot(appDatasourceOptions),
+    UsersModule,
+    DonationReceiversModule
   ],
-  controllers: [RepositoryServiceController],
-  providers: [RepositoryServiceService],
+  controllers: [],
+  providers: [],
 })
 
 export class RepositoryServiceModule {}

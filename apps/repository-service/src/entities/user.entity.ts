@@ -1,11 +1,10 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, Index, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import DonationReceiver from './donation-receiver.entity';
 import Donation from './donation.entity';
 import StripeConnectCustomer from './stripe-connect-customer.entity';
-
-@Entity()
-class User {
+@Entity("user")
+class UserEntity {
   @Index()
   @PrimaryGeneratedColumn()
   public id: number;
@@ -23,7 +22,7 @@ class User {
   public dob: Date;
 
   @Column({nullable: true})
-  public address: String;
+  public address: string;
 
   @Column()
   @Exclude()
@@ -45,4 +44,4 @@ class User {
   stripeConnectCustomers: StripeConnectCustomer[]
 }
 
-export default User;
+export default UserEntity;

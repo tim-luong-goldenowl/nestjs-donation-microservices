@@ -2,13 +2,13 @@ import { Column, Entity, Index, JoinColumn, OneToMany, OneToOne, PrimaryGenerate
 import User from './user.entity';
 import StripeConnectCustomer from './stripe-connect-customer.entity';
 import Donation from './donation.entity';
- 
-@Entity()
-class DonationReceiver {
+
+@Entity("donation_receiver")
+class DonationReceiverEntity {
   @Index()
   @PrimaryGeneratedColumn()
   public id: number;
-  
+
   @Column({nullable: true})
   public email: string
 
@@ -17,7 +17,7 @@ class DonationReceiver {
 
   @Column({nullable: true})
   public companyName: string
-  
+
   @Column({nullable: true})
   public country: string
 
@@ -36,15 +36,19 @@ class DonationReceiver {
   @Column({nullable: true})
   public stripeConnectedAccountId: string
 
+
+  @JoinColumn()
+  public userId: number
+
   @JoinColumn()
   @OneToOne(() => User)
   public user: User;
-  
+
   @OneToMany(() => Donation, (donation) => donation.donationReceiver)
   donations: Donation[]
 
   @OneToMany(() => StripeConnectCustomer, (stripeConnectCustomer) => stripeConnectCustomer.donationReceiver)
   stripeConnectCustomers: Donation[]
 }
- 
-export default DonationReceiver;
+
+export default DonationReceiverEntity;

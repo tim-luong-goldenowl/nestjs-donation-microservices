@@ -1,9 +1,35 @@
 syntax = "proto3";
 
-package auth;
+package user;
+
+import "proto/donationReceiver.proto";
 
 service UsersService {
   rpc FindAllUsers (Empty) returns (Users) {}
+  rpc CreateUser(CreateUserDto) returns (User) {}
+  rpc FindOneByEmail(Email) returns (User) {}
+  rpc FindOneById(Id) returns (User) {}
+  rpc GetProfiles(Id) returns (UserProfiles) {}
+}
+
+message Email {
+  string email = 1;
+}
+
+message Id {
+  int64 id = 1;
+}
+
+message CreateUserDto {
+  string firstName = 1;
+  string lastName = 2;
+  string email = 3;
+  string password = 4;
+}
+
+message UserProfiles {
+  User user = 1;
+  donationReceiver.DonationReceiver donationReceiver = 2;
 }
 
 message Empty {};
@@ -13,9 +39,26 @@ message Users {
 }
 
 message User {
-  string id = 1;
-  string username = 2;
-  string password = 3;
-  int32 age = 4;
-  bool subscribed = 5;
+  int64 id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string dob = 4;
+  string address = 5;
+  string stripeCustomerId = 6;
+  string avatarUrl = 7;
+  string email = 8;
+  string password = 9;
+}
+
+message DonationReceiver {
+  int64 id = 1;
+  string email = 2;
+  string businessName = 3;
+  string companyName = 4;
+  string country = 5;
+  string bio = 6;
+  string onboardingCompleteToken = 7;
+  string avatarUrl = 8;
+  bool verified = 9;
+  string stripeConnectedAccountId = 10;
 }
