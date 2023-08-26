@@ -44,6 +44,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
+    },
+    "donation-receiver-service": {
+      "type": "application",
+      "root": "apps/donation-receiver-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/donation-receiver-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/donation-receiver-service/tsconfig.app.json"
+      }
     }
   }
 }

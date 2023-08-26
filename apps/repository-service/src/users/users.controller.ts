@@ -1,14 +1,15 @@
 import { Controller } from '@nestjs/common';
-import { CreateUserDto, Email, Empty, Id, User, Users, UsersServiceController, UsersServiceControllerMethods } from '@app/common';
 import { Observable } from 'rxjs';
 import { UsersService } from './users.service';
+import { CreateUserDto, Email, Empty, Id, User, UserProfiles, Users } from '@app/common/types/user';
+import { UserRepositoryServiceController, UserRepositoryServiceControllerMethods } from '@app/common/types/repositoryService';
 
 @Controller()
-@UsersServiceControllerMethods()
-export class UsersController implements UsersServiceController {
+@UserRepositoryServiceControllerMethods()
+export class UsersController implements UserRepositoryServiceController {
   constructor(
     private userService: UsersService,
-) { }
+  ) { }
 
   findAllUsers(request: Empty): Users | Promise<Users> | Observable<Users> {
     return {
@@ -27,6 +28,10 @@ export class UsersController implements UsersServiceController {
   }
 
   findOneById(request: Id): User | Promise<User> | Observable<User> {
-    return this.userService.findById(request.id)
+    return this.userService.findById(request.uid)
+  }
+
+  getProfiles(request: Id): UserProfiles | Promise<UserProfiles> | Observable<UserProfiles> {
+    return
   }
 }

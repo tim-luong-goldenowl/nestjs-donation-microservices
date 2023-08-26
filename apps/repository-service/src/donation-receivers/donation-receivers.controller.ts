@@ -1,27 +1,58 @@
-import { InjectQueue } from '@nestjs/bull';
-import { Body, Controller, Get, Query, Post, Req, Put, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Queue } from 'bull';
-import { plainToInstance } from 'class-transformer';
-// import { MailService } from 'src/mail/mail.service';
-import Stripe from 'stripe';
 import { DonationReceiversService } from './donation-receivers.service';
-import DonationReceiverEntity from 'apps/repository-service/src/entities/donation-receiver.entity';
+import {
+    CreateDonationReceiverRequest,
+    DonationReceiver,
+    DonationReceivers,
+    FindAllVerifiedRequest,
+    FindOneByUidRequest,
+    FindOneByUserRequest,
+    FindOneDrResponse,
+    UpdateConnectedAccountInforRequest,
+    UpdateProfileRequest,
+} from '@app/common/types/donationReceiver';
+import { Observable } from 'rxjs';
+import { Controller } from '@nestjs/common';
+import {
+    DonationReceiverRepositoryServiceController,
+    DonationReceiverRepositoryServiceControllerMethods,
+} from '@app/common/types/repositoryService';
 
-@Controller('donation-receivers')
-export class DonationReceiversController {
-    constructor(
+@Controller()
+@DonationReceiverRepositoryServiceControllerMethods()
+export class DonationReceiversController
+    implements DonationReceiverRepositoryServiceController {
+    constructor(private donationReceiversService: DonationReceiversService) { }
 
-    ) {}
+    findAllVerified(request: FindAllVerifiedRequest): DonationReceivers | Promise<DonationReceivers> | Observable<DonationReceivers> {
+        return this.donationReceiversService.findAllVerified(
+            request.currentUserUid,
+        );
+    }
 
-    // @Get()
-    // async getDonationReceivers(@Req() req) {
-    //     const data = await this.donationRecieverService.getVerified(req.user)
+    create(request: CreateDonationReceiverRequest): DonationReceiver | Promise<DonationReceiver> | Observable<DonationReceiver> {
+        return this.donationReceiversService.create(request);
+    }
 
-    //     return {
-    //         data
-    //     }
-    // }
+    findOneByUser(request: FindOneByUserRequest): FindOneDrResponse | Promise<FindOneDrResponse> | Observable<FindOneDrResponse> {
+        return this.donationReceiversService.findOneByUser(request.uid);
+
+    }
+
+    findOneByUid(request: FindOneByUidRequest): FindOneDrResponse | Promise<FindOneDrResponse> | Observable<FindOneDrResponse> {
+        return this.donationReceiversService.findOneByUid(request.uid);
+    }
+
+    updateProfile(request: UpdateProfileRequest): DonationReceiver | Promise<DonationReceiver> | Observable<DonationReceiver> {
+        return this.donationReceiversService.updateProfile(request);
+    }
+
+    findOneNotVerified(request: FindOneByUidRequest): FindOneDrResponse | Promise<FindOneDrResponse> | Observable<FindOneDrResponse> {
+        return this.donationReceiversService.findOneNotVerified(request.uid);
+    }
+
+    updateConnectedAccountInfor(request: UpdateConnectedAccountInforRequest): DonationReceiver | Promise<DonationReceiver> | Observable<DonationReceiver> {
+        return this.donationReceiversService.updateConnectedAccountInfor(request);
+    }
 
     // @Get('/:id')
     // async getById(@Param() query, @Req() req) {
@@ -78,5 +109,3 @@ export class DonationReceiversController {
     //     return donationReceiver;
     // }
 }
-
-

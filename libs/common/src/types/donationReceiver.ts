@@ -1,11 +1,21 @@
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
 
-export const protobufPackage = "user";
+export const protobufPackage = "donationReceiver";
 
-export interface UserId {
-  userId: number;
+export interface CreateDonationReceiverRequest {
+  uid: string;
+}
+
+export interface FindAllVerifiedRequest {
+  currentUserUid: string;
+}
+
+export interface FindOneByUserRequest {
+  uid: string;
+}
+
+export interface FindOneByUidRequest {
+  uid: string;
 }
 
 export interface DonationReceivers {
@@ -13,7 +23,7 @@ export interface DonationReceivers {
 }
 
 export interface DonationReceiver {
-  id: number;
+  uid: string;
   email: string;
   businessName: string;
   companyName: string;
@@ -25,29 +35,47 @@ export interface DonationReceiver {
   stripeConnectedAccountId: string;
 }
 
-export const USER_PACKAGE_NAME = "user";
-
-export interface UsersServiceClient {
-  findOneByUser(request: UserId): Observable<DonationReceiver>;
+export interface FindOneDrResponse {
+  found: boolean;
+  donationReceiver: DonationReceiver | undefined;
 }
 
-export interface UsersServiceController {
-  findOneByUser(request: UserId): Promise<DonationReceiver> | Observable<DonationReceiver> | DonationReceiver;
+export interface VerifyRequest {
+  donationReceiverUid: string;
 }
 
-export function UsersServiceControllerMethods() {
-  return function (constructor: Function) {
-    const grpcMethods: string[] = ["findOneByUser"];
-    for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("UsersService", method)(constructor.prototype[method], method, descriptor);
-    }
-    const grpcStreamMethods: string[] = [];
-    for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("UsersService", method)(constructor.prototype[method], method, descriptor);
-    }
-  };
+export interface VerifyResponse {
+  onboardingLink: string;
 }
 
-export const USERS_SERVICE_NAME = "UsersService";
+export interface CompleteOnboardingRequest {
+  token: string;
+}
+
+export interface CompleteOnboardingResponse {
+  success: boolean;
+}
+
+export interface UpdateProfileRequest {
+  email: string;
+  businessName: string;
+  companyName: string;
+  country: string;
+  bio: string;
+  avatarUrl: string;
+  uid: string;
+  avatar: FileObject | undefined;
+}
+
+export interface FileObject {
+  mimetype: string;
+  buffer: Uint8Array;
+}
+
+export interface UpdateConnectedAccountInforRequest {
+  onboardingCompleteToken: string;
+  stripeConnectedAccountId: string;
+  uid: string;
+}
+
+export const DONATION_RECEIVER_PACKAGE_NAME = "donationReceiver";

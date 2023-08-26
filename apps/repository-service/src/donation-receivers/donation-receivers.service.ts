@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import DonationReceiverEntity from '../entities/donation-receiver.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { DonationReceiver, User } from '@app/common';
+import { Not, Repository } from 'typeorm';
+import { CreateDonationReceiverRequest, DonationReceiver, DonationReceivers, FindOneDrResponse, UpdateConnectedAccountInforRequest, UpdateProfileRequest } from '@app/common/types/donationReceiver';
+import { User } from '@app/common/types/user';
 
 @Injectable()
 export class DonationReceiversService {
@@ -11,11 +12,102 @@ export class DonationReceiversService {
         private donationReceiverRepository: Repository<DonationReceiverEntity>,
     ) { }
 
-    async findOneByUser(user: User): Promise<DonationReceiver> {
-        const donationReceiver = await this.donationReceiverRepository.findOneBy({
-            userId: user.id
+    async findOneByUser(userUid: string): Promise<FindOneDrResponse> {
+        const donationReceiver = await this.donationReceiverRepository.findOne({
+            where: {
+                user: { uid: userUid }
+            }
         })
 
-        return donationReceiver
+        if (donationReceiver) {
+            return {
+                found: true,
+                donationReceiver
+            }
+
+        } else {
+            return {
+                found: false,
+                donationReceiver: null
+            }
+        }
+    }
+
+    async findOneByUid(uid: string): Promise<FindOneDrResponse> {
+        const donationReceiver = await this.donationReceiverRepository.findOne({
+            where: {
+                uid
+            }
+        })
+
+        if (donationReceiver) {
+            return {
+                found: true,
+                donationReceiver
+            }
+
+        } else {
+            return {
+                found: false,
+                donationReceiver: null
+            }
+        }
+    }
+
+    async findOneNotVerified(uid: string): Promise<FindOneDrResponse> {
+        const donationReceiver = await this.donationReceiverRepository.findOne({
+            where: {
+                uid,
+                verified: false
+            }
+        })
+
+        if (donationReceiver) {
+            return {
+                found: true,
+                donationReceiver
+            }
+
+        } else {
+            return {
+                found: false,
+                donationReceiver: null
+            }
+        }
+    }
+
+    async findAllVerified(currentUserUid: string): Promise<DonationReceivers> {
+        const result = await this.donationReceiverRepository.find({
+            where: {
+                verified: true,
+                user: Not(currentUserUid)
+            }
+        })
+
+        return {
+            donationReceivers: result
+        }
+    }
+
+    async create(params: CreateDonationReceiverRequest): Promise<DonationReceiver> {
+        const donationReceiver = this.donationReceiverRepository.create({
+            user: { uid: params.uid }
+        })
+
+        return await this.donationReceiverRepository.save(donationReceiver)
+    }
+
+    async updateProfile(params: UpdateProfileRequest): Promise<DonationReceiver> {
+        return await this.donationReceiverRepository.save({
+            uid: params.uid,
+            ...params
+        })
+    }
+
+    async updateConnectedAccountInfor(params: UpdateConnectedAccountInforRequest): Promise<DonationReceiver> {
+        return await this.donationReceiverRepository.save({
+            uid: params.uid,
+            ...params
+        })
     }
 }

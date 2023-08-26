@@ -1,13 +1,14 @@
-import { Column, Entity, Index, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import User from './user.entity';
 import DonationReceiver from './donation-receiver.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 class StripeConnectCustomer {
     @Index()
-    @PrimaryGeneratedColumn()
-    public id: number;
-
+    @PrimaryGeneratedColumn("uuid")
+    public uid: string;
+    
     @Column()
     public customerId: string;
 

@@ -1,0 +1,24 @@
+syntax = "proto3";
+package repositoryService;
+
+import "donationReceiver.proto";
+import "user.proto";
+
+
+service UserRepositoryService {
+    rpc FindAllUsers (user.Empty) returns (user.Users) {}
+    rpc CreateUser(user.CreateUserDto) returns (user.User) {}
+    rpc FindOneByEmail(user.Email) returns (user.User) {}
+    rpc FindOneById(user.Id) returns (user.User) {}
+    rpc GetProfiles(user.Id) returns (user.UserProfiles) {}
+}
+
+service DonationReceiverRepositoryService {
+    rpc FindOneByUser(donationReceiver.FindOneByUserRequest) returns (donationReceiver.FindOneDrResponse) {}
+    rpc FindOneByUid(donationReceiver.FindOneByUidRequest) returns (donationReceiver.FindOneDrResponse) {}
+    rpc FindOneNotVerified(donationReceiver.FindOneByUidRequest) returns (donationReceiver.FindOneDrResponse) {}
+    rpc FindAllVerified(donationReceiver.FindAllVerifiedRequest) returns (donationReceiver.DonationReceivers) {}
+    rpc Create(donationReceiver.CreateDonationReceiverRequest) returns (donationReceiver.DonationReceiver) {}
+    rpc UpdateProfile(donationReceiver.UpdateProfileRequest) returns (donationReceiver.DonationReceiver) {}
+    rpc UpdateConnectedAccountInfor(donationReceiver.UpdateConnectedAccountInforRequest) returns (donationReceiver.DonationReceiver) {}
+}

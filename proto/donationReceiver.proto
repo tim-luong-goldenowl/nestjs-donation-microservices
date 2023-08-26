@@ -2,12 +2,20 @@ syntax = "proto3";
 
 package donationReceiver;
 
-service UsersService {
-  rpc FindOneByUser(UserId) returns (DonationReceiver) {}
+message CreateDonationReceiverRequest {
+  string uid = 1;
 }
 
-message UserId {
-  int64 userId = 1;
+message FindAllVerifiedRequest {
+  string currentUserUid = 1;
+}
+
+message FindOneByUserRequest {
+  string uid = 1;
+}
+
+message FindOneByUidRequest {
+  string uid = 1;
 }
 
 message DonationReceivers {
@@ -15,7 +23,7 @@ message DonationReceivers {
 }
 
 message DonationReceiver {
-  int64 id = 1;
+  string uid = 1;
   string email = 2;
   string businessName = 3;
   string companyName = 4;
@@ -25,4 +33,47 @@ message DonationReceiver {
   string avatarUrl = 8;
   bool verified = 9;
   string stripeConnectedAccountId = 10;
+}
+
+message FindOneDrResponse {
+  bool found = 1;
+  DonationReceiver donationReceiver = 2;
+}
+
+message VerifyRequest {
+  string donationReceiverUid = 1;
+}
+
+message VerifyResponse {
+  string onboardingLink = 1;
+}
+
+message CompleteOnboardingRequest {
+  string token = 1;
+}
+
+message CompleteOnboardingResponse {
+  bool success = 1;
+}
+
+message UpdateProfileRequest {
+    string email = 1;
+    string businessName = 2;
+    string companyName = 3;
+    string country = 4;
+    string bio = 5;
+    string avatarUrl = 6;
+    string uid = 7;
+    FileObject avatar = 8;
+}
+
+message FileObject {
+  string mimetype = 1;
+  bytes buffer = 2;
+}
+
+message UpdateConnectedAccountInforRequest {
+  string onboardingCompleteToken = 1;
+  string stripeConnectedAccountId = 2;
+  string uid = 3;
 }

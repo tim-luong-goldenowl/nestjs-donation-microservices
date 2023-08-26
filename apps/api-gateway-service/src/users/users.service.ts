@@ -1,31 +1,34 @@
-import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  OnModuleInit,
+} from '@nestjs/common';
 import { UserRegistrationParamsDto } from '../auth/dtos/user-registration-params.dto';
-import { USERS_SERVICE_CLIENT_NAME, USERS_SERVICE_NAME } from '../constants';
 import { ClientGrpc } from '@nestjs/microservices';
-import { User, UsersServiceClient } from '@app/common';
 import { lastValueFrom } from 'rxjs';
+import { User } from '@app/common/types/user';
+import { UserRepositoryServiceClient } from '@app/common/types/repositoryService';
+import { REPOSITORY_SERVICE_CLIENT_NAME, USERS_REPOSITORY_SERVICE_NAME } from '@app/common/constants';
 
 @Injectable()
 export class UsersService implements OnModuleInit {
-  private usersService: UsersServiceClient;
+  private usersService: UserRepositoryServiceClient;
 
-  constructor(
-    @Inject(USERS_SERVICE_CLIENT_NAME) private client: ClientGrpc
-  ) { }
+  constructor(@Inject(REPOSITORY_SERVICE_CLIENT_NAME) private client: ClientGrpc) {}
 
   onModuleInit() {
     this.usersService =
-      this.client.getService<UsersServiceClient>(USERS_SERVICE_NAME);
+      this.client.getService<UserRepositoryServiceClient>(USERS_REPOSITORY_SERVICE_NAME);
   }
 
   async createUser(params: UserRegistrationParamsDto): Promise<User> {
-    const user = await lastValueFrom(this.usersService.createUser(params))
+    const user = await lastValueFrom(this.usersService.createUser(params));
 
-    return user
+    return user;
   }
 
-  async findOneById(id: number): Promise<User> {
-    const user = await lastValueFrom(this.usersService.findOneById({id}))
+  async findOneById(uid: string): Promise<User> {
+    const user = await lastValueFrom(this.usersService.findOneById({ uid }));
 
     return user;
   }

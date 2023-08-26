@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto, User } from '@app/common';
 import UserEntity from '../entities/user.entity';
+import { CreateUserDto, User } from '@app/common/types/user';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -30,8 +31,8 @@ export class UsersService {
     return this.userMapper(user)
   }
 
-  async findById(id: number): Promise<User> {
-    const user = await this.userRepository.findOneBy({id})
+  async findById(uid: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({uid})
 
     return this.userMapper(user)
   }

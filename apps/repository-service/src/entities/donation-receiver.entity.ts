@@ -1,13 +1,14 @@
-import { Column, Entity, Index, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import User from './user.entity';
 import StripeConnectCustomer from './stripe-connect-customer.entity';
 import Donation from './donation.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity("donation_receiver")
 class DonationReceiverEntity {
   @Index()
-  @PrimaryGeneratedColumn()
-  public id: number;
+  @PrimaryGeneratedColumn("uuid")
+  public uid: string;
 
   @Column({nullable: true})
   public email: string
@@ -36,12 +37,8 @@ class DonationReceiverEntity {
   @Column({nullable: true})
   public stripeConnectedAccountId: string
 
-
-  @JoinColumn()
-  public userId: number
-
-  @JoinColumn()
   @OneToOne(() => User)
+  @JoinColumn()
   public user: User;
 
   @OneToMany(() => Donation, (donation) => donation.donationReceiver)

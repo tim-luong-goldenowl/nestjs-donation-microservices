@@ -1,1 +1,1 @@
-export * from './user'
+export * as RepositoryService from './repositoryService'

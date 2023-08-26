@@ -1,31 +1,30 @@
-import { HttpException, HttpStatus, Inject, Injectable, OnModuleInit, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { HttpException, HttpStatus, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { UserSigninParamsDto } from './dtos/user-signin-params.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { iUserJwtPayload } from './interfaces/user-jwt-payload.interfact';
-import { USERS_SERVICE_CLIENT_NAME, USERS_SERVICE_NAME } from '../constants';
 import { ClientGrpc } from '@nestjs/microservices';
-import { UsersServiceClient } from '@app/common';
 import { lastValueFrom } from 'rxjs';
+import UserEntity from 'apps/repository-service/src/entities/user.entity';
+import { USER_REPOSITORY_SERVICE_NAME, UserRepositoryServiceClient } from '@app/common/types/repositoryService';
+import { REPOSITORY_SERVICE_CLIENT_NAME } from '@app/common/constants';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
-      private usersService: UsersServiceClient;
+    private usersService: UserRepositoryServiceClient;
 
     constructor(
         private jwtService: JwtService,
-        @Inject(USERS_SERVICE_CLIENT_NAME) private client: ClientGrpc
+        @Inject(REPOSITORY_SERVICE_CLIENT_NAME) private client: ClientGrpc
     ) { }
 
     onModuleInit() {
         this.usersService =
-          this.client.getService<UsersServiceClient>(USERS_SERVICE_NAME);
-      }
+            this.client.getService<UserRepositoryServiceClient>(USER_REPOSITORY_SERVICE_NAME);
+    }
 
     async validateUser(params: UserSigninParamsDto): Promise<any> {
-        const user = await lastValueFrom(this.usersService.findOneByEmail({email: params.email}))
+        const user = await lastValueFrom(this.usersService.findOneByEmail({ email: params.email }))
 
         if (!user) {
             throw new HttpException('User does not exist!', HttpStatus.BAD_REQUEST)
@@ -41,9 +40,9 @@ export class AuthService implements OnModuleInit {
         return null;
     }
 
-    async login(user): Promise<string> {
+    async login(user: UserEntity): Promise<string> {
         const payload: iUserJwtPayload = {
-            id: user.id
+            uid: user.uid
         }
 
         const accessToken = await this.jwtService.signAsync(payload)

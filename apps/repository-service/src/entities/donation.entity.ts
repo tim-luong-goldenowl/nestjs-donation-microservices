@@ -1,13 +1,14 @@
-import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import User from './user.entity';
 import DonationReceiver from './donation-receiver.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 class Donation {
     @Index()
-    @PrimaryGeneratedColumn()
-    public id: number;
-
+    @PrimaryGeneratedColumn("uuid")
+    public uid: string;
+    
     @Column()
     public message: string;
 

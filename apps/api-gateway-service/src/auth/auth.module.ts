@@ -6,10 +6,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { USERS_SERVICE_CLIENT_NAME } from '../constants';
-import { USER_PACKAGE_NAME } from '@app/common';
 import { join } from 'path';
 import { UsersService } from '../users/users.service';
+import { REPOSITORY_SERVICE_PACKAGE_NAME } from '@app/common/types/repositoryService';
+import { REPOSITORY_SERVICE_CLIENT_NAME } from '@app/common/constants';
 
 @Module({
   controllers: [AuthController],
@@ -28,11 +28,11 @@ import { UsersService } from '../users/users.service';
     }),
     ClientsModule.register([
       {
-        name: USERS_SERVICE_CLIENT_NAME,
+        name: REPOSITORY_SERVICE_CLIENT_NAME,
         transport: Transport.GRPC,
         options: {
-          package: USER_PACKAGE_NAME,
-          protoPath: join(process.cwd(), './proto/user.proto'),
+          package: REPOSITORY_SERVICE_PACKAGE_NAME,
+          protoPath: join(process.cwd(), './proto/repositoryService.proto'),
         },
       },
     ])

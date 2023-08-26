@@ -10,7 +10,7 @@ export const appDatasourceOptions: DataSourceOptions = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     entities: ['dist/apps/repository-service/**/*.entity.js'],
-    migrations: ['dist/apps/repository-service/migrations/*.js']
+    migrations: ['dist/apps/repository-service/apps/repository-service/src/migrations/*.js']
 }
 
 const appDatasource = new DataSource(appDatasourceOptions);

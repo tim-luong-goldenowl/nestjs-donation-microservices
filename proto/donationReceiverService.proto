@@ -1,0 +1,11 @@
+syntax = "proto3";
+package donationReceiverService;
+
+import "donationReceiver.proto";
+
+service DonationReceiversService {
+    rpc Create(donationReceiver.CreateDonationReceiverRequest) returns (donationReceiver.DonationReceiver) {}
+    rpc Verify(donationReceiver.VerifyRequest) returns (donationReceiver.VerifyResponse) {}
+    rpc CompleteOnboarding(donationReceiver.CompleteOnboardingRequest) returns (donationReceiver.CompleteOnboardingResponse) {}
+    rpc UpdateProfile(donationReceiver.UpdateProfileRequest) returns (donationReceiver.DonationReceiver) {}
+}

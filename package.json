@@ -9,6 +9,9 @@
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
+    "start:repo": "nest start repository-service --watch",
+    "start:api": "nest start api-gateway-service --watch",
+    "start:dr": "nest start donation-receiver-service --watch",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/api-gateway-service/main",
@@ -18,12 +21,13 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/api-gateway-service/test/jest-e2e.json",
-    "typeorm": "typeorm-ts-node-commonjs -d dist/apps/repository-service/typeorm.config.js",
+    "typeorm": "typeorm-ts-node-commonjs -d dist/apps/repository-service/apps/repository-service/src/typeorm.config.js",
     "migration:generate": "yarn run typeorm -- migration:generate",
     "migration:run": "yarn run typeorm -- migration:run",
     "migration:revert": "yarn run typeorm -- migration:revert"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.400.0",
     "@grpc/grpc-js": "^1.9.1",
     "@nestjs/bull": "^10.0.1",
     "@nestjs/common": "^10.0.0",
@@ -34,11 +38,13 @@
     "@nestjs/passport": "^10.0.1",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/typeorm": "^10.0.0",
+    "@types/multer": "^1.4.7",
     "bcrypt": "^5.1.1",
     "bull": "^4.11.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
+    "nestjs-stripe": "^1.0.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
@@ -47,7 +53,8 @@
     "rxjs": "^7.8.1",
     "stripe": "^13.3.0",
     "ts-proto": "^1.156.7",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.17",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

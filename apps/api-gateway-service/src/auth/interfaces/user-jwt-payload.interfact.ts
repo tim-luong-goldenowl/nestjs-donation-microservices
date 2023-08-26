@@ -1,3 +1,3 @@
 export interface iUserJwtPayload {
-    id: number
+    uid: string
 }

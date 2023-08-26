@@ -45,28 +45,16 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
-## Test
+
+## gRPC
 
 ```bash
-# unit tests
-$ yarn run test
+#for MacOs
+protoc -I ./proto --plugin=protoc-gen-ts_proto=./node_modules/.bin/protoc-gen-ts_proto  --ts_proto_out=./libs/common/src/types --ts_proto_opt=nestJs=true  ./proto/user.proto
 
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+#for Windows
+protoc -I ./proto --plugin=protoc-gen-ts_proto=.\\node_modules\\.bin\\protoc-gen-ts_proto.cmd --ts_proto_out=./libs/common/src/types ./proto/user.proto
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ## License
 

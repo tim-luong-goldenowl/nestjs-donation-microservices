@@ -4,16 +4,16 @@ import { Inject, Injectable, Req, UnauthorizedException } from '@nestjs/common';
 import { iUserJwtPayload } from '../interfaces/user-jwt-payload.interfact';
 import { ConfigService } from '@nestjs/config';
 import { Request as RequestType } from 'express';
-import { USERS_SERVICE_CLIENT_NAME } from '../../constants';
 import { ClientGrpc } from '@nestjs/microservices';
-import { UsersServiceClient } from '@app/common';
 import { lastValueFrom } from 'rxjs';
+import { USER_REPOSITORY_SERVICE_NAME, UserRepositoryServiceClient } from '@app/common/types/repositoryService';
+import { REPOSITORY_SERVICE_CLIENT_NAME } from '@app/common/constants';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private configService: ConfigService,
-    @Inject(USERS_SERVICE_CLIENT_NAME) private client: ClientGrpc
+    @Inject(REPOSITORY_SERVICE_CLIENT_NAME) private client: ClientGrpc
     ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors(
@@ -28,10 +28,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: iUserJwtPayload) {
-    const user = await lastValueFrom(this.client.getService<UsersServiceClient>('UsersService').findAllUsers({}))
-
-    console.log("@@@@@@@@@@@@@@@@@@user", user)
-
+    const user = await lastValueFrom(this.client.getService<UserRepositoryServiceClient>(USER_REPOSITORY_SERVICE_NAME).findOneById({uid: payload.uid}))
     if (!user) {
       throw new UnauthorizedException();
     }

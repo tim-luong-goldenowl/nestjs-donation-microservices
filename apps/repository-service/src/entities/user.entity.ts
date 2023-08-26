@@ -1,14 +1,16 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, Index, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import DonationReceiver from './donation-receiver.entity';
 import Donation from './donation.entity';
 import StripeConnectCustomer from './stripe-connect-customer.entity';
+import { v4 as uuidv4 } from 'uuid';
+
 @Entity("user")
 class UserEntity {
   @Index()
-  @PrimaryGeneratedColumn()
-  public id: number;
-
+  @PrimaryGeneratedColumn("uuid")
+  public uid: string;
+  
   @Column()
   public firstName: string;
 

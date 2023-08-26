@@ -2,22 +2,14 @@ syntax = "proto3";
 
 package user;
 
-import "proto/donationReceiver.proto";
-
-service UsersService {
-  rpc FindAllUsers (Empty) returns (Users) {}
-  rpc CreateUser(CreateUserDto) returns (User) {}
-  rpc FindOneByEmail(Email) returns (User) {}
-  rpc FindOneById(Id) returns (User) {}
-  rpc GetProfiles(Id) returns (UserProfiles) {}
-}
+import "donationReceiver.proto";
 
 message Email {
   string email = 1;
 }
 
 message Id {
-  int64 id = 1;
+  string uid = 1;
 }
 
 message CreateUserDto {
@@ -39,7 +31,7 @@ message Users {
 }
 
 message User {
-  int64 id = 1;
+  string uid = 1;
   string firstName = 2;
   string lastName = 3;
   string dob = 4;
@@ -48,17 +40,4 @@ message User {
   string avatarUrl = 7;
   string email = 8;
   string password = 9;
-}
-
-message DonationReceiver {
-  int64 id = 1;
-  string email = 2;
-  string businessName = 3;
-  string companyName = 4;
-  string country = 5;
-  string bio = 6;
-  string onboardingCompleteToken = 7;
-  string avatarUrl = 8;
-  bool verified = 9;
-  string stripeConnectedAccountId = 10;
 }

@@ -5,7 +5,7 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local.guard';
 import { Public } from './auth.decorator';
 import { UsersService } from '../users/users.service';
-import { User } from '@app/common';
+import { User } from '@app/common/types/user';
 
 @Controller('auth')
 export class AuthController {
@@ -28,6 +28,7 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('sign-in')
     async signIn(@Request() req, @Response() res) {
+        console.log("@@@@useeeee", req.user)
         const jwtToken = await this.authService.login(req.user);
 
         res.cookie('token', jwtToken, {
