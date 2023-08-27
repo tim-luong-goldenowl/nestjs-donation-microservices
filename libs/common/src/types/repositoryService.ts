@@ -6,13 +6,15 @@ import {
   DonationReceiver,
   DonationReceivers,
   FindAllVerifiedRequest,
+  FindOneByOnboardingTokenRequest,
   FindOneByUidRequest,
   FindOneByUserRequest,
   FindOneDrResponse,
   UpdateConnectedAccountInforRequest,
   UpdateProfileRequest,
+  UpdateVerifyInforRequest,
 } from "./donationReceiver";
-import { CreateUserDto, Email, Empty, Id, User, UserProfiles, Users } from "./user";
+import { CreateUserDto, Email, Empty, Id, UpdateUserProfileRequest, User, UserProfiles, Users } from "./user";
 
 export const protobufPackage = "repositoryService";
 
@@ -28,6 +30,8 @@ export interface UserRepositoryServiceClient {
   findOneById(request: Id): Observable<User>;
 
   getProfiles(request: Id): Observable<UserProfiles>;
+
+  updateUserProfile(request: UpdateUserProfileRequest): Observable<User>;
 }
 
 export interface UserRepositoryServiceController {
@@ -40,11 +44,20 @@ export interface UserRepositoryServiceController {
   findOneById(request: Id): Promise<User> | Observable<User> | User;
 
   getProfiles(request: Id): Promise<UserProfiles> | Observable<UserProfiles> | UserProfiles;
+
+  updateUserProfile(request: UpdateUserProfileRequest): Promise<User> | Observable<User> | User;
 }
 
 export function UserRepositoryServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["findAllUsers", "createUser", "findOneByEmail", "findOneById", "getProfiles"];
+    const grpcMethods: string[] = [
+      "findAllUsers",
+      "createUser",
+      "findOneByEmail",
+      "findOneById",
+      "getProfiles",
+      "updateUserProfile",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("UserRepositoryService", method)(constructor.prototype[method], method, descriptor);
@@ -66,6 +79,8 @@ export interface DonationReceiverRepositoryServiceClient {
 
   findOneNotVerified(request: FindOneByUidRequest): Observable<FindOneDrResponse>;
 
+  findOneByOnboardingToken(request: FindOneByOnboardingTokenRequest): Observable<FindOneDrResponse>;
+
   findAllVerified(request: FindAllVerifiedRequest): Observable<DonationReceivers>;
 
   create(request: CreateDonationReceiverRequest): Observable<DonationReceiver>;
@@ -73,6 +88,8 @@ export interface DonationReceiverRepositoryServiceClient {
   updateProfile(request: UpdateProfileRequest): Observable<DonationReceiver>;
 
   updateConnectedAccountInfor(request: UpdateConnectedAccountInforRequest): Observable<DonationReceiver>;
+
+  updateVerifyInfor(request: UpdateVerifyInforRequest): Observable<DonationReceiver>;
 }
 
 export interface DonationReceiverRepositoryServiceController {
@@ -86,6 +103,10 @@ export interface DonationReceiverRepositoryServiceController {
 
   findOneNotVerified(
     request: FindOneByUidRequest,
+  ): Promise<FindOneDrResponse> | Observable<FindOneDrResponse> | FindOneDrResponse;
+
+  findOneByOnboardingToken(
+    request: FindOneByOnboardingTokenRequest,
   ): Promise<FindOneDrResponse> | Observable<FindOneDrResponse> | FindOneDrResponse;
 
   findAllVerified(
@@ -103,6 +124,10 @@ export interface DonationReceiverRepositoryServiceController {
   updateConnectedAccountInfor(
     request: UpdateConnectedAccountInforRequest,
   ): Promise<DonationReceiver> | Observable<DonationReceiver> | DonationReceiver;
+
+  updateVerifyInfor(
+    request: UpdateVerifyInforRequest,
+  ): Promise<DonationReceiver> | Observable<DonationReceiver> | DonationReceiver;
 }
 
 export function DonationReceiverRepositoryServiceControllerMethods() {
@@ -111,10 +136,12 @@ export function DonationReceiverRepositoryServiceControllerMethods() {
       "findOneByUser",
       "findOneByUid",
       "findOneNotVerified",
+      "findOneByOnboardingToken",
       "findAllVerified",
       "create",
       "updateProfile",
       "updateConnectedAccountInfor",
+      "updateVerifyInfor",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

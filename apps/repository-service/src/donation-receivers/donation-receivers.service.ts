@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import DonationReceiverEntity from '../entities/donation-receiver.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
-import { CreateDonationReceiverRequest, DonationReceiver, DonationReceivers, FindOneDrResponse, UpdateConnectedAccountInforRequest, UpdateProfileRequest } from '@app/common/types/donationReceiver';
+import { CreateDonationReceiverRequest, DonationReceiver, DonationReceivers, FindOneDrResponse, UpdateConnectedAccountInforRequest, UpdateProfileRequest, UpdateVerifyInforRequest } from '@app/common/types/donationReceiver';
 import { User } from '@app/common/types/user';
 
 @Injectable()
@@ -76,6 +76,27 @@ export class DonationReceiversService {
         }
     }
 
+    async findOneByOnboardingTokken(token: string): Promise<FindOneDrResponse> {
+        const donationReceiver = await this.donationReceiverRepository.findOne({
+            where: {
+                onboardingCompleteToken: token
+            }
+        })
+
+        if (donationReceiver) {
+            return {
+                found: true,
+                donationReceiver
+            }
+
+        } else {
+            return {
+                found: false,
+                donationReceiver: null
+            }
+        }
+    }
+
     async findAllVerified(currentUserUid: string): Promise<DonationReceivers> {
         const result = await this.donationReceiverRepository.find({
             where: {
@@ -105,6 +126,13 @@ export class DonationReceiversService {
     }
 
     async updateConnectedAccountInfor(params: UpdateConnectedAccountInforRequest): Promise<DonationReceiver> {
+        return await this.donationReceiverRepository.save({
+            uid: params.uid,
+            ...params
+        })
+    }
+
+    async updateVerifyInfor(params: UpdateVerifyInforRequest): Promise<DonationReceiver> {
         return await this.donationReceiverRepository.save({
             uid: params.uid,
             ...params

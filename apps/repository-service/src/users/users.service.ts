@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import UserEntity from '../entities/user.entity';
-import { CreateUserDto, User } from '@app/common/types/user';
+import { CreateUserDto, UpdateUserProfileRequest, User } from '@app/common/types/user';
 import { v4 as uuidv4 } from 'uuid';
+import { UpdateProfileRequest } from '@app/common/types/donationReceiver';
 
 @Injectable()
 export class UsersService {
@@ -36,6 +37,16 @@ export class UsersService {
 
     return this.userMapper(user)
   }
+
+  async updateProfile(params: UpdateUserProfileRequest): Promise<User> {
+    const user = await this.userRepository.save({
+        uid: params.uid,
+        ...params
+    })
+
+    return this.userMapper(user)
+}
+
 
   private userMapper(user: UserEntity): User {
     const userInstance = {

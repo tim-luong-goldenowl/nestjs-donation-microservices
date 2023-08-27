@@ -78,4 +78,14 @@ export interface UpdateConnectedAccountInforRequest {
   uid: string;
 }
 
+export interface FindOneByOnboardingTokenRequest {
+  token: string;
+}
+
+export interface UpdateVerifyInforRequest {
+  verified: boolean;
+  onboardingCompleteToken: string;
+  uid: string;
+}
+
 export const DONATION_RECEIVER_PACKAGE_NAME = "donationReceiver";

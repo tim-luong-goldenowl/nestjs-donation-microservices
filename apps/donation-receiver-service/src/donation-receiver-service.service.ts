@@ -1,5 +1,5 @@
-import { DONATION_RECEIVERS_REPOSITORY_SERVICE_NAME, REPOSITORY_SERVICE_CLIENT_NAME } from '@app/common/constants';
-import { CreateDonationReceiverRequest, DonationReceiver, UpdateProfileRequest, VerifyRequest, VerifyResponse } from '@app/common/types/donationReceiver';
+import { DONATION_RECEIVERS_REPOSITORY_SERVICE_NAME, REPOSITORY_SERVICE_CLIENT_NAME, SEND_MAIL_QUEUE_NAME, SEND_ONBOARDING_LINK_JOB_NAME } from '@app/common/constants';
+import { CompleteOnboardingRequest, CompleteOnboardingResponse, CreateDonationReceiverRequest, DonationReceiver, UpdateProfileRequest, VerifyRequest, VerifyResponse } from '@app/common/types/donationReceiver';
 import { DonationReceiverRepositoryServiceClient } from '@app/common/types/repositoryService';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
@@ -8,6 +8,8 @@ import { S3Service } from './s3/s3.service';
 import { randomBytes } from 'crypto';
 import { CreateConnectedAccountResponse } from './stripe/types';
 import { StripeConnectService } from './stripe/services/stripe-connect/stripe-connect.service';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 @Injectable()
 export class DonationReceiverServiceService implements OnModuleInit {
@@ -17,6 +19,7 @@ export class DonationReceiverServiceService implements OnModuleInit {
     @Inject(REPOSITORY_SERVICE_CLIENT_NAME) private client: ClientGrpc,
     private s3Service: S3Service,
     private stripeConnectService: StripeConnectService,
+    @InjectQueue(SEND_MAIL_QUEUE_NAME) private sendMailQueue: Queue
   ) { }
 
   onModuleInit() {
@@ -64,6 +67,7 @@ export class DonationReceiverServiceService implements OnModuleInit {
 
     const donationReceiver = findOneResult.donationReceiver
 
+    console.log("donationReceiverdonationReceiver", donationReceiver)
     const onboardingCompleteToken = randomBytes(20).toString('hex')
     const returnUrl = `http://localhost:3001/users/completed-dr-registration/${onboardingCompleteToken}`
 
@@ -72,19 +76,14 @@ export class DonationReceiverServiceService implements OnModuleInit {
     if (connectedAccountResult.success) {
       const onboardingLink = connectedAccountResult.onboardingLink
 
-      // await this.donationReceiverRepository.save({
-      //   id,
-      //   onboardingCompleteToken,
-      //   stripeConnectedAccountId: connectedAccountResult.connectedAccountId
-      // });
-
       await lastValueFrom(this.donationRepositoryService.updateConnectedAccountInfor({
         onboardingCompleteToken: onboardingCompleteToken,
         stripeConnectedAccountId: connectedAccountResult.connectedAccountId,
         uid: donationReceiver.uid
       }))
 
-      // this.sendMailQueue.add(SEND_ONBOARDING_LINK_JOB_NAME, { donationReceiver, onboardingLink: connectedAccountResult.onboardingLink });
+      this.sendMailQueue.add(SEND_ONBOARDING_LINK_JOB_NAME, { donationReceiver, onboardingLink })
+
       return {
         onboardingLink
       };
@@ -92,6 +91,23 @@ export class DonationReceiverServiceService implements OnModuleInit {
       return {
         onboardingLink: null
       }
+    }
+  }
+
+  async completeOnboarding(request: CompleteOnboardingRequest): Promise<CompleteOnboardingResponse> {
+    const findOneResult = await lastValueFrom(this.donationRepositoryService.findOneByOnboardingToken({ token: request.token }))
+
+    const donationReceiver = findOneResult.donationReceiver
+
+    if (donationReceiver) {
+      await lastValueFrom(this.donationRepositoryService.updateVerifyInfor({ verified: true, onboardingCompleteToken: '', uid: donationReceiver.uid }))
+      return {
+        success: true
+      }
+    }
+
+    return {
+      success: false
     }
   }
 }

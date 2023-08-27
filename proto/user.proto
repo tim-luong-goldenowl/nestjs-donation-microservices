@@ -3,6 +3,7 @@ syntax = "proto3";
 package user;
 
 import "donationReceiver.proto";
+import "google/protobuf/timestamp.proto";
 
 message Email {
   string email = 1;
@@ -40,4 +41,24 @@ message User {
   string avatarUrl = 7;
   string email = 8;
   string password = 9;
+}
+
+message GetUserProfilesRequest {
+  string uid = 1;
+}
+
+message GetUserProfilesResponse {
+  User userProfile = 1;
+  donationReceiver.DonationReceiver donationReceiverProfile = 2;
+}
+
+message UpdateUserProfileRequest {
+  string uid = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string dob = 4;
+  string address = 5;
+  string stripeCustomerId = 6;
+  string avatarUrl = 7;
+  donationReceiver.FileObject avatar = 8;
 }

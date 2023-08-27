@@ -12,6 +12,7 @@
     "start:repo": "nest start repository-service --watch",
     "start:api": "nest start api-gateway-service --watch",
     "start:dr": "nest start donation-receiver-service --watch",
+    "start:user": "nest start user-service --watch",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/api-gateway-service/main",
@@ -29,6 +30,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.400.0",
     "@grpc/grpc-js": "^1.9.1",
+    "@nestjs-modules/mailer": "^1.9.1",
     "@nestjs/bull": "^10.0.1",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.0.0",

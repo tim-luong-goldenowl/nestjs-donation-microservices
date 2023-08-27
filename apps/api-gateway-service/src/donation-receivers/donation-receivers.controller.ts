@@ -66,8 +66,11 @@ export class DonationReceiversController {
   @Get('register-completed/:token')
   async registerCompleted(@Param() query: any) {
     const token = query.token;
+    console.log("@@@@@@@@token", token)
+
     const result = await this.donationRecieverService.completeOnboarding({token})
 
+    console.log("@@@@@@@@result", result)
     return {
       success: result.success
     }

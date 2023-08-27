@@ -9,7 +9,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { UsersService } from '../users/users.service';
 import { REPOSITORY_SERVICE_PACKAGE_NAME } from '@app/common/types/repositoryService';
-import { REPOSITORY_SERVICE_CLIENT_NAME } from '@app/common/constants';
+import { REPOSITORY_SERVICE_CLIENT_NAME, USER_SERVICE_CLIENT_NAME } from '@app/common/constants';
+import { USER_SERVICE_PACKAGE_NAME } from '@app/common/types/userService';
 
 @Module({
   controllers: [AuthController],
@@ -35,6 +36,15 @@ import { REPOSITORY_SERVICE_CLIENT_NAME } from '@app/common/constants';
           protoPath: join(process.cwd(), './proto/repositoryService.proto'),
         },
       },
+      {
+        name: USER_SERVICE_CLIENT_NAME,
+        transport: Transport.GRPC,
+        options: {
+          package: USER_SERVICE_PACKAGE_NAME,
+          protoPath: join(process.cwd(), './proto/userService.proto'),
+          url: 'localhost:3006'
+        },
+      }
     ])
   ],
 })

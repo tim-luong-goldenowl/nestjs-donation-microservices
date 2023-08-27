@@ -51,7 +51,20 @@
       "entryFile": "main",
       "sourceRoot": "apps/donation-receiver-service/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/donation-receiver-service/tsconfig.app.json"
+        "tsConfigPath": "apps/donation-receiver-service/tsconfig.app.json",
+        "assets": [
+          "**/*.hbs"
+        ],
+        "watchAssets": true
+      }
+    },
+    "user-service": {
+      "type": "application",
+      "root": "apps/user-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/user-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/user-service/tsconfig.app.json"
       }
     }
   }

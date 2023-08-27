@@ -6,12 +6,14 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
 import { ConfigModule } from '@nestjs/config';
 import { DonationReceiversModule } from './donation-receivers/donation-receivers.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     AuthModule,
-    DonationReceiversModule
+    DonationReceiversModule,
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService,

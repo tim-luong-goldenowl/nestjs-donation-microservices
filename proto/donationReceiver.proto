@@ -77,3 +77,13 @@ message UpdateConnectedAccountInforRequest {
   string stripeConnectedAccountId = 2;
   string uid = 3;
 }
+
+message FindOneByOnboardingTokenRequest {
+  string token = 1;
+}
+
+message UpdateVerifyInforRequest {
+  bool verified = 1;
+  string onboardingCompleteToken = 2;
+  string uid = 3;
+}

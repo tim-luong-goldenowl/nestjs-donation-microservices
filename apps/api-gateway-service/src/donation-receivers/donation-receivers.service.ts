@@ -41,8 +41,8 @@ export class DonationReceiversService implements OnModuleInit {
     return await lastValueFrom(this.donationReceiverService.updateProfile({...request, avatar: avatar}))
   }
 
-  async verify(request: VerifyRequest): Promise<VerifyResponse> {
-    return await lastValueFrom(this.donationReceiverService.verify(request))
+  async verify(uid: string): Promise<VerifyResponse> {
+    return await lastValueFrom(this.donationReceiverService.verify({donationReceiverUid: uid}))
   }
 
   async completeOnboarding(request: CompleteOnboardingRequest): Promise<CompleteOnboardingResponse> {

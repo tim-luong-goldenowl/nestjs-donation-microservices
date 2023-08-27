@@ -11,14 +11,17 @@ service UserRepositoryService {
     rpc FindOneByEmail(user.Email) returns (user.User) {}
     rpc FindOneById(user.Id) returns (user.User) {}
     rpc GetProfiles(user.Id) returns (user.UserProfiles) {}
+    rpc UpdateUserProfile(user.UpdateUserProfileRequest) returns (user.User) {}
 }
 
 service DonationReceiverRepositoryService {
     rpc FindOneByUser(donationReceiver.FindOneByUserRequest) returns (donationReceiver.FindOneDrResponse) {}
     rpc FindOneByUid(donationReceiver.FindOneByUidRequest) returns (donationReceiver.FindOneDrResponse) {}
     rpc FindOneNotVerified(donationReceiver.FindOneByUidRequest) returns (donationReceiver.FindOneDrResponse) {}
+    rpc FindOneByOnboardingToken(donationReceiver.FindOneByOnboardingTokenRequest) returns (donationReceiver.FindOneDrResponse) {}
     rpc FindAllVerified(donationReceiver.FindAllVerifiedRequest) returns (donationReceiver.DonationReceivers) {}
     rpc Create(donationReceiver.CreateDonationReceiverRequest) returns (donationReceiver.DonationReceiver) {}
     rpc UpdateProfile(donationReceiver.UpdateProfileRequest) returns (donationReceiver.DonationReceiver) {}
     rpc UpdateConnectedAccountInfor(donationReceiver.UpdateConnectedAccountInforRequest) returns (donationReceiver.DonationReceiver) {}
+    rpc UpdateVerifyInfor(donationReceiver.UpdateVerifyInforRequest) returns (donationReceiver.DonationReceiver) {}
 }

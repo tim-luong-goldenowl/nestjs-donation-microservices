@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { UsersService } from './users.service';
-import { CreateUserDto, Email, Empty, Id, User, UserProfiles, Users } from '@app/common/types/user';
+import { CreateUserDto, Email, Empty, Id, UpdateUserProfileRequest, User, UserProfiles, Users } from '@app/common/types/user';
 import { UserRepositoryServiceController, UserRepositoryServiceControllerMethods } from '@app/common/types/repositoryService';
 
 @Controller()
@@ -33,5 +33,9 @@ export class UsersController implements UserRepositoryServiceController {
 
   getProfiles(request: Id): UserProfiles | Promise<UserProfiles> | Observable<UserProfiles> {
     return
+  }
+
+  updateUserProfile(request: UpdateUserProfileRequest): User | Promise<User> | Observable<User> {
+    return this.userService.updateProfile(request)
   }
 }

@@ -1,0 +1,34 @@
+syntax = "proto3";
+package userService;
+
+import "user.proto";
+
+service UsersService {
+    rpc GetProfiles(user.GetUserProfilesRequest) returns (user.GetUserProfilesResponse) {}
+    rpc UpdateUserProfile(user.UpdateUserProfileRequest) returns (user.User) {}
+    rpc GetPaymentMethod(GetPaymentMethodRequest) returns (GetPaymentMethodResponse) {}
+    rpc CreateCustomerAndCard(CreateCustomerAndCardRequest) returns (CreateCustomerAndCardResponse) {}
+}
+
+
+message GetPaymentMethodRequest {
+    string stripeCustomerId = 1;
+}
+
+message GetPaymentMethodResponse {
+    bool success = 1;
+    string last4 = 2;
+    string brand = 3;
+    string country = 4;
+    string expMonth = 5;
+    string expYear = 6;
+}
+
+message CreateCustomerAndCardRequest {
+    user.User user = 1;
+    string cardToken = 2;
+}
+
+message CreateCustomerAndCardResponse {
+    bool success = 1;
+}

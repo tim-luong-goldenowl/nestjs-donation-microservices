@@ -4,11 +4,13 @@ import {
     DonationReceiver,
     DonationReceivers,
     FindAllVerifiedRequest,
+    FindOneByOnboardingTokenRequest,
     FindOneByUidRequest,
     FindOneByUserRequest,
     FindOneDrResponse,
     UpdateConnectedAccountInforRequest,
     UpdateProfileRequest,
+    UpdateVerifyInforRequest,
 } from '@app/common/types/donationReceiver';
 import { Observable } from 'rxjs';
 import { Controller } from '@nestjs/common';
@@ -52,6 +54,14 @@ export class DonationReceiversController
 
     updateConnectedAccountInfor(request: UpdateConnectedAccountInforRequest): DonationReceiver | Promise<DonationReceiver> | Observable<DonationReceiver> {
         return this.donationReceiversService.updateConnectedAccountInfor(request);
+    }
+
+    findOneByOnboardingToken(request: FindOneByOnboardingTokenRequest): FindOneDrResponse | Promise<FindOneDrResponse> | Observable<FindOneDrResponse> {
+        return this.donationReceiversService.findOneByOnboardingTokken(request.token);
+    }
+
+    updateVerifyInfor(request: UpdateVerifyInforRequest): DonationReceiver | Promise<DonationReceiver> | Observable<DonationReceiver> {
+        return this.donationReceiversService.updateVerifyInfor(request);
     }
 
     // @Get('/:id')

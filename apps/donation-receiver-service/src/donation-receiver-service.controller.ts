@@ -10,7 +10,7 @@ export class DonationReceiverServiceController implements DonationReceiversServi
   constructor(private readonly donationReceiverServiceService: DonationReceiverServiceService) { }
 
   completeOnboarding(request: CompleteOnboardingRequest): CompleteOnboardingResponse | Observable<CompleteOnboardingResponse> | Promise<CompleteOnboardingResponse> {
-    return
+    return this.donationReceiverServiceService.completeOnboarding(request)
   }
 
   create(request: CreateDonationReceiverRequest): DonationReceiver | Promise<DonationReceiver> | Observable<DonationReceiver> {

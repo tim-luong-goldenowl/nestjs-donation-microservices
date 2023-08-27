@@ -15,7 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        apiKey: "123123213",
+        apiKey: configService.get('STRIPE_TEST_SECRET_KEY'),
         apiVersion: '2023-08-16'
       })
     })
