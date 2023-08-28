@@ -3,7 +3,7 @@ package repositoryService;
 
 import "donationReceiver.proto";
 import "user.proto";
-
+import "donation.proto";
 
 service UserRepositoryService {
     rpc FindAllUsers (user.Empty) returns (user.Users) {}
@@ -28,12 +28,13 @@ service DonationReceiverRepositoryService {
 }
 
 service DonationRepositoryService {
-    rpc GetDonationCountByDrId(GetDonationCountByDrIdRequest) returns (GetDonationCountByDrIdResponse) {}
+    rpc GetDonationCountByDrId(donation.GetDonationCountByDrIdRequest) returns (donation.GetDonationCountByDrIdResponse) {}
+    rpc CreateDonation(donation.CreateDonationRequest) returns (donation.CreateDonationResponse) {}
 }
 
 service StripeConnectCustomerRepositoryService {
     rpc Create(CreateConnectCustomerRequest) returns (StripeConnectCustomer) {}
-    rpc FindByUserAndDr(FindByUserAndDrRequest) returns (StripeConnectCustomer) {}
+    rpc FindByUserAndDr(FindByUserAndDrRequest) returns (FindByUserAndDrResponse) {}
 }
 
 message CreateConnectCustomerRequest {
@@ -47,6 +48,11 @@ message FindByUserAndDrRequest {
     donationReceiver.DonationReceiver donationReceiver = 2;
 }
 
+message FindByUserAndDrResponse {
+    bool found = 1;
+    StripeConnectCustomer stripeConnectCustomer = 2;
+}
+
 message StripeConnectCustomer {
     string uid = 1;
     string customerId = 2;
@@ -57,12 +63,4 @@ message StripeConnectCustomer {
 message UpdateUserStripeCustomerIdRequest {
     string uid = 1;
     string stripeCustomerId = 2;
-}
-
-message GetDonationCountByDrIdRequest {
-    string donationReceiverUid = 1;
-}
-
-message GetDonationCountByDrIdResponse {
-    int32 count = 1;
 }

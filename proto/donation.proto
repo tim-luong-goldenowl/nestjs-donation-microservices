@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package donation;
+
+import "user.proto";
+import "donationReceiver.proto";
+
+message GetDonationCountByDrIdRequest {
+    string donationReceiverUid = 1;
+}
+
+message GetDonationCountByDrIdResponse {
+    int32 count = 1;
+}
+
+message CreateDonationRequest {
+    string message = 1;
+    int32 value = 2;
+    string donationReceiverUid = 3;
+    // donationReceiver.DonationReceiver donationReceiver = 3;
+    user.User user = 4;
+}
+
+message CreateDonationResponse {
+    bool success = 1;
+    Donation donation = 2;
+}
+
+message Donation {
+    string message = 1;
+    int32 value = 2;
+    string uid = 3;
+    string userUid = 4;
+    string donationReceiverUid = 5;
+}

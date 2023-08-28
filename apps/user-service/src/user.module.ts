@@ -7,6 +7,7 @@ import { REPOSITORY_SERVICE_PACKAGE_NAME } from '@app/common/types/repositorySer
 import { join } from 'path';
 import { S3Module } from './s3/s3.module';
 import { StripeUltilsModule } from './stripe/stripe.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -21,9 +22,10 @@ import { StripeUltilsModule } from './stripe/stripe.module';
       },
     ]),
     S3Module,
-    StripeUltilsModule
+    StripeUltilsModule,
+    ConfigModule.forRoot()
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, ConfigService],
 })
 export class UserServiceModule {}

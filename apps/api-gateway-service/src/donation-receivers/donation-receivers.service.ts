@@ -4,17 +4,20 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { DONATION_RECEIVER_REPOSITORY_SERVICE_NAME, DonationReceiverRepositoryServiceClient } from '@app/common/types/repositoryService';
 import { DONATION_RECEIVER_SERVICE_CLIENT_NAME, DONATION_RECEIVER_SERVICE_NAME, REPOSITORY_SERVICE_CLIENT_NAME } from '@app/common/constants';
-import { DonationReceiversServiceClient } from '@app/common/types/donationReceiverService';
+import { DONATIONS_SERVICE_NAME, DonationReceiversServiceClient, DonationsServiceClient } from '@app/common/types/donationReceiverService';
 import { DonationReceiverRegistrationDto } from './dtos/donation-receiver-registration.dto';
+import { GetDonationCountByDrIdRequest, GetDonationCountByDrIdResponse } from '@app/common/types/donation';
 
 @Injectable()
 export class DonationReceiversService implements OnModuleInit {
   private donationReceiverRepositoryService: DonationReceiverRepositoryServiceClient;
   private donationReceiverService: DonationReceiversServiceClient;
+  private donationService: DonationsServiceClient;
 
   constructor(
     @Inject(REPOSITORY_SERVICE_CLIENT_NAME) private repositoryClient: ClientGrpc,
     @Inject(DONATION_RECEIVER_SERVICE_CLIENT_NAME) private serviceClient: ClientGrpc,
+
   ) { }
 
   onModuleInit() {
@@ -26,6 +29,11 @@ export class DonationReceiversService implements OnModuleInit {
     this.donationReceiverService =
       this.serviceClient.getService<DonationReceiversServiceClient>(
         DONATION_RECEIVER_SERVICE_NAME,
+      );
+
+    this.donationService =
+      this.serviceClient.getService<DonationsServiceClient>(
+        DONATIONS_SERVICE_NAME,
       );
   }
 
@@ -53,5 +61,9 @@ export class DonationReceiversService implements OnModuleInit {
     const findResult = await lastValueFrom(this.donationReceiverRepositoryService.findOneByUid(request))
 
     return findResult.donationReceiver
+  }
+
+  async getDonationCount(req: GetDonationCountByDrIdRequest): Promise<GetDonationCountByDrIdResponse> {
+    return await lastValueFrom(this.donationService.getDonationCountByDrId(req))
   }
 }

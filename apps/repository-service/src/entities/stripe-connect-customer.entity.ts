@@ -12,6 +12,12 @@ class StripeConnectCustomerEntity {
     @Column()
     public customerId: string;
 
+    @JoinColumn()
+    userUid: string
+
+    @JoinColumn()
+    donationReceiverUid: string
+
     @ManyToOne(() => User, (user: User) => user.stripeConnectCustomers)
     @JoinColumn()
     public user: User

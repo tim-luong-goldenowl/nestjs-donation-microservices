@@ -9,5 +9,5 @@ export class DonationDto {
     value: number
 
     @IsNotEmpty()
-    donationReceiverId: number
+    donationReceiverUid: string
 }

@@ -14,6 +14,8 @@ import { BullModule } from '@nestjs/bull';
 import { MailService } from './mail/mail.service';
 import { MailerJobConsumer } from './job-consumers/mailer-job.consumer';
 import { MailModule } from './mail/mail.module';
+import { DonationService } from './donation-service.service';
+import { DonationServiceController } from './donation-service.controller';
 
 @Module({
   imports: [
@@ -45,7 +47,7 @@ import { MailModule } from './mail/mail.module';
     }),
     MailModule
   ],
-  controllers: [DonationReceiverServiceController],
-  providers: [DonationReceiverServiceService, S3Service, ConfigService, StripeConnectService, MailService, MailerJobConsumer],
+  controllers: [DonationReceiverServiceController, DonationServiceController],
+  providers: [DonationReceiverServiceService, S3Service, ConfigService, StripeConnectService, MailService, MailerJobConsumer, DonationService],
 })
 export class DonationReceiverServiceModule { }

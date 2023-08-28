@@ -2,6 +2,7 @@ syntax = "proto3";
 package donationReceiverService;
 
 import "donationReceiver.proto";
+import "donation.proto";
 
 service DonationReceiversService {
     rpc Create(donationReceiver.CreateDonationReceiverRequest) returns (donationReceiver.DonationReceiver) {}
@@ -11,32 +12,6 @@ service DonationReceiversService {
 }
 
 service DonationsService {
-    rpc CreateDonation(CreateDonationRequest) returns (Donation) {}
-}
-
-message User {
-    string uid = 1;
-    string firstName = 2;
-    string lastName = 3;
-    string dob = 4;
-    string address = 5;
-    string stripeCustomerId = 6;
-    string avatarUrl = 7;
-    string email = 8;
-    string password = 9;
-  }
-
-message CreateDonationRequest {
-    string message = 1;
-    int32 value = 2;
-    string donationReceiverUid = 3;
-    User user = 4;
-}
-
-message Donation {
-    string message = 1;
-    int32 value = 2;
-    string uid = 3;
-    string userUid = 4;
-    string donationReceiverUid = 5;
+    rpc CreateDonation(donation.CreateDonationRequest) returns (donation.CreateDonationResponse) {}
+    rpc GetDonationCountByDrId(donation.GetDonationCountByDrIdRequest) returns (donation.GetDonationCountByDrIdResponse) {}
 }

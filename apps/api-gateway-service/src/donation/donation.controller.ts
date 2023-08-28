@@ -1,26 +1,24 @@
 import { Body, Controller, Post, Req } from '@nestjs/common';
-import { DonationDto } from './donation.dto';
 import { DonationService } from './donation.service';
-import { CreateDonationService } from './create-donation.service';
+import { DonationDto } from './donation.dto';
 
 @Controller('donation')
 export class DonationController {
     constructor(
         private donationService: DonationService,
-        private createDonationService: CreateDonationService
     ) { }
 
     @Post()
     async createDonation(@Body() params: DonationDto, @Req() req) {
-        const donation = await this.createDonationService.create(params, req.user)
-        const donationCount = await this.donationService.getDonationCount(params.donationReceiverId)
+        const donationCreateResult = await this.donationService.createDonation({...params, user: req.user})
+        const donationCount = await this.donationService.getDonationCount({donationReceiverUid: params.donationReceiverUid})
 
-        if (donation) {
+        if (donationCreateResult.success) {
             return {
                 success: true,
                 data: {
-                    donation,
-                    donationCount
+                    donation: donationCreateResult.donation,
+                    donationCount: donationCount.count
                 }
             };
         } else {

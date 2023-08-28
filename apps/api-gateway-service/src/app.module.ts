@@ -7,13 +7,15 @@ import { JwtAuthGuard } from './auth/guards/jwt.guard';
 import { ConfigModule } from '@nestjs/config';
 import { DonationReceiversModule } from './donation-receivers/donation-receivers.module';
 import { UsersModule } from './users/users.module';
+import { DonationModule } from './donation/donation.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     AuthModule,
     DonationReceiversModule,
-    UsersModule
+    UsersModule,
+    DonationModule
   ],
   controllers: [AppController],
   providers: [AppService,

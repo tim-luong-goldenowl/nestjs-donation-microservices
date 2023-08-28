@@ -1,38 +1,49 @@
-import {
-  DONATION_REPOSITORY_SERVICE_NAME,
-  REPOSITORY_SERVICE_CLIENT_NAME,
-} from '@app/common/constants';
-import {
-  DonationRepositoryServiceClient,
-  GetDonationCountByDrIdResponse,
-} from '@app/common/types/repositoryService';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import DonationEntity from '../entities/donation.entity';
+import { Repository } from 'typeorm';
+import { CreateDonationRequest, CreateDonationResponse, GetDonationCountByDrIdRequest, GetDonationCountByDrIdResponse } from '@app/common/types/donation';
 
 @Injectable()
-export class DonationService implements OnModuleInit {
-  private donationRepositoryService: DonationRepositoryServiceClient;
-
+export class DonationService {
   constructor(
-    @Inject(REPOSITORY_SERVICE_CLIENT_NAME)
-    private repositoryClient: ClientGrpc,
+    @InjectRepository(DonationEntity)
+    private donationRepository: Repository<DonationEntity>,
   ) {}
 
-  onModuleInit() {
-    this.donationRepositoryService =
-      this.repositoryClient.getService<DonationRepositoryServiceClient>(
-        DONATION_REPOSITORY_SERVICE_NAME,
-      );
+  async getDonationCount(
+    request: GetDonationCountByDrIdRequest,
+  ): Promise<GetDonationCountByDrIdResponse> {
+    const result = await this.donationRepository
+      .createQueryBuilder('donations')
+      .where('donations.donationReceiverUid = :donationReceiverUid', {
+        donationReceiverUid: request.donationReceiverUid,
+      })
+      .getCount();
+    return {
+      count: result,
+    };
   }
 
-  async getDonationCount(
-    donationReceiverUid: string,
-  ): Promise<GetDonationCountByDrIdResponse> {
-    return await lastValueFrom(
-      this.donationRepositoryService.getDonationCountByDrId({
-        donationReceiverUid,
-      }),
-    );
+  async createDonation(
+    request: CreateDonationRequest,
+  ): Promise<CreateDonationResponse> {
+    try {
+      const donation = this.donationRepository.create({
+        ...request,
+        donationReceiver: { uid: request.donationReceiverUid }
+      });
+      await this.donationRepository.save(donation);
+
+      return {
+        success: true,
+        donation,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        donation: null,
+      };
+    }
   }
 }

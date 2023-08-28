@@ -6,6 +6,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { REPOSITORY_SERVICE_PACKAGE_NAME } from '@app/common/types/repositoryService';
 import { join } from 'path';
 import { DONATION_RECEIVER_SERVICE_PACKAGE_NAME } from '@app/common/types/donationReceiverService';
+import DonationEntity from '../entities/donation.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   controllers: [DonationController],
@@ -29,7 +31,8 @@ import { DONATION_RECEIVER_SERVICE_PACKAGE_NAME } from '@app/common/types/donati
           url: 'localhost:3005'
         },
       },
-    ])
+    ]),
+    TypeOrmModule.forFeature([DonationEntity])
   ]
 })
 

@@ -2,6 +2,7 @@ export const REPOSITORY_SERVICE_CLIENT_NAME = 'REPOSITORY_SERVICE_CLIENT'
 export const USERS_REPOSITORY_SERVICE_NAME = 'UserRepositoryService';
 export const DONATION_RECEIVERS_REPOSITORY_SERVICE_NAME = 'DonationReceiverRepositoryService';
 export const DONATION_REPOSITORY_SERVICE_NAME = 'DonationRepositoryService';
+export const CONNECT_CUSTOMER_REPOSITORY_SERVICE_NAME = 'StripeConnectCustomerRepositoryService';
 
 export const DONATION_RECEIVER_SERVICE_CLIENT_NAME = 'DONATION_RECEIVER_SERVICE_CLIENT'
 export const DONATION_RECEIVER_SERVICE_NAME = 'DonationReceiversService'

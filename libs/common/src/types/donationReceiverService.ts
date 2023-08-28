@@ -2,6 +2,12 @@
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 import {
+  CreateDonationRequest,
+  CreateDonationResponse,
+  GetDonationCountByDrIdRequest,
+  GetDonationCountByDrIdResponse,
+} from "./donation";
+import {
   CompleteOnboardingRequest,
   CompleteOnboardingResponse,
   CreateDonationReceiverRequest,
@@ -12,33 +18,6 @@ import {
 } from "./donationReceiver";
 
 export const protobufPackage = "donationReceiverService";
-
-export interface User {
-  uid: string;
-  firstName: string;
-  lastName: string;
-  dob: string;
-  address: string;
-  stripeCustomerId: string;
-  avatarUrl: string;
-  email: string;
-  password: string;
-}
-
-export interface CreateDonationRequest {
-  message: string;
-  value: number;
-  donationReceiverUid: string;
-  user: User | undefined;
-}
-
-export interface Donation {
-  message: string;
-  value: number;
-  uid: string;
-  userUid: string;
-  donationReceiverUid: string;
-}
 
 export const DONATION_RECEIVER_SERVICE_PACKAGE_NAME = "donationReceiverService";
 
@@ -86,16 +65,27 @@ export function DonationReceiversServiceControllerMethods() {
 export const DONATION_RECEIVERS_SERVICE_NAME = "DonationReceiversService";
 
 export interface DonationsServiceClient {
-  createDonation(request: CreateDonationRequest): Observable<Donation>;
+  createDonation(request: CreateDonationRequest): Observable<CreateDonationResponse>;
+
+  getDonationCountByDrId(request: GetDonationCountByDrIdRequest): Observable<GetDonationCountByDrIdResponse>;
 }
 
 export interface DonationsServiceController {
-  createDonation(request: CreateDonationRequest): Promise<Donation> | Observable<Donation> | Donation;
+  createDonation(
+    request: CreateDonationRequest,
+  ): Promise<CreateDonationResponse> | Observable<CreateDonationResponse> | CreateDonationResponse;
+
+  getDonationCountByDrId(
+    request: GetDonationCountByDrIdRequest,
+  ):
+    | Promise<GetDonationCountByDrIdResponse>
+    | Observable<GetDonationCountByDrIdResponse>
+    | GetDonationCountByDrIdResponse;
 }
 
 export function DonationsServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createDonation"];
+    const grpcMethods: string[] = ["createDonation", "getDonationCountByDrId"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("DonationsService", method)(constructor.prototype[method], method, descriptor);

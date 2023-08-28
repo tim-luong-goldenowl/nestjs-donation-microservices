@@ -2,6 +2,12 @@
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 import {
+  CreateDonationRequest,
+  CreateDonationResponse,
+  GetDonationCountByDrIdRequest,
+  GetDonationCountByDrIdResponse,
+} from "./donation";
+import {
   CreateDonationReceiverRequest,
   DonationReceiver,
   DonationReceivers,
@@ -29,6 +35,11 @@ export interface FindByUserAndDrRequest {
   donationReceiver: DonationReceiver | undefined;
 }
 
+export interface FindByUserAndDrResponse {
+  found: boolean;
+  stripeConnectCustomer: StripeConnectCustomer | undefined;
+}
+
 export interface StripeConnectCustomer {
   uid: string;
   customerId: string;
@@ -39,14 +50,6 @@ export interface StripeConnectCustomer {
 export interface UpdateUserStripeCustomerIdRequest {
   uid: string;
   stripeCustomerId: string;
-}
-
-export interface GetDonationCountByDrIdRequest {
-  donationReceiverUid: string;
-}
-
-export interface GetDonationCountByDrIdResponse {
-  count: number;
 }
 
 export const REPOSITORY_SERVICE_PACKAGE_NAME = "repositoryService";
@@ -195,6 +198,8 @@ export const DONATION_RECEIVER_REPOSITORY_SERVICE_NAME = "DonationReceiverReposi
 
 export interface DonationRepositoryServiceClient {
   getDonationCountByDrId(request: GetDonationCountByDrIdRequest): Observable<GetDonationCountByDrIdResponse>;
+
+  createDonation(request: CreateDonationRequest): Observable<CreateDonationResponse>;
 }
 
 export interface DonationRepositoryServiceController {
@@ -204,11 +209,15 @@ export interface DonationRepositoryServiceController {
     | Promise<GetDonationCountByDrIdResponse>
     | Observable<GetDonationCountByDrIdResponse>
     | GetDonationCountByDrIdResponse;
+
+  createDonation(
+    request: CreateDonationRequest,
+  ): Promise<CreateDonationResponse> | Observable<CreateDonationResponse> | CreateDonationResponse;
 }
 
 export function DonationRepositoryServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getDonationCountByDrId"];
+    const grpcMethods: string[] = ["getDonationCountByDrId", "createDonation"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("DonationRepositoryService", method)(constructor.prototype[method], method, descriptor);
@@ -226,7 +235,7 @@ export const DONATION_REPOSITORY_SERVICE_NAME = "DonationRepositoryService";
 export interface StripeConnectCustomerRepositoryServiceClient {
   create(request: CreateConnectCustomerRequest): Observable<StripeConnectCustomer>;
 
-  findByUserAndDr(request: FindByUserAndDrRequest): Observable<StripeConnectCustomer>;
+  findByUserAndDr(request: FindByUserAndDrRequest): Observable<FindByUserAndDrResponse>;
 }
 
 export interface StripeConnectCustomerRepositoryServiceController {
@@ -236,7 +245,7 @@ export interface StripeConnectCustomerRepositoryServiceController {
 
   findByUserAndDr(
     request: FindByUserAndDrRequest,
-  ): Promise<StripeConnectCustomer> | Observable<StripeConnectCustomer> | StripeConnectCustomer;
+  ): Promise<FindByUserAndDrResponse> | Observable<FindByUserAndDrResponse> | FindByUserAndDrResponse;
 }
 
 export function StripeConnectCustomerRepositoryServiceControllerMethods() {

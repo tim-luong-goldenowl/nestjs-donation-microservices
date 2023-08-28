@@ -38,7 +38,10 @@ export class UsersController {
     async getPaymentMethod(@Req() req) {
         const paymentMethod = await this.userService.getPaymentMethod({stripeCustomerId: req.user.stripeCustomerId})
 
-        return paymentMethod
+        return {
+            success: paymentMethod.success,
+            data: paymentMethod
+        }
     }
 
     @Post('/create-customer-card')

@@ -1,4 +1,4 @@
-import { Column, Entity, Index, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import User from './user.entity';
 import DonationReceiver from './donation-receiver.entity';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,13 +7,19 @@ import { v4 as uuidv4 } from 'uuid';
 class DonationEntity {
     @Index()
     @PrimaryGeneratedColumn("uuid")
-    public uid: string;
+    public uid: string
 
     @Column()
-    public message: string;
+    public message: string
 
     @Column()
-    public value: number;
+    public value: number
+
+    @JoinColumn()
+    userUid: string
+
+    @JoinColumn()
+    donationReceiverUid: string
 
     @ManyToOne(() => User, (user) => user.donations)
     public user: User

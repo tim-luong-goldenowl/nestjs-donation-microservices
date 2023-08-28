@@ -19,7 +19,7 @@ export class UsersService {
 
     const userInstance = {
       ...user,
-      dob: user.dob ? user.dob.toDateString() : ''
+      dob: user.dob ? user.dob.toString() : ''
     }
 
     return userInstance
@@ -38,6 +38,8 @@ export class UsersService {
   }
 
   async updateProfile(params: UpdateUserProfileRequest): Promise<User> {
+    console.log("@@@@@@@@@@@@@@@params", params)
+
     const user = await this.userRepository.save({
         uid: params.uid,
         ...params
@@ -59,7 +61,7 @@ export class UsersService {
   private userMapper(user: UserEntity): User {
     const userInstance = {
       ...user,
-      dob: user.dob ? user.dob.toDateString() : ''
+      dob: user.dob ? user.dob.toString() : ''
     }
 
     return userInstance

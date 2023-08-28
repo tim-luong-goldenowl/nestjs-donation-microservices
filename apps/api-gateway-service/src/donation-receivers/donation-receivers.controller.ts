@@ -28,7 +28,7 @@ export class DonationReceiversController {
     const data = await this.donationRecieverService.getVerifiedDonationReceivers({ currentUserUid: req.user.uid });
 
     return {
-      data,
+      data: data.donationReceivers,
     };
   }
 
@@ -76,12 +76,12 @@ export class DonationReceiversController {
   @Get('/:id')
   async getById(@Param() query, @Req() req) {
       const data = await this.donationRecieverService.getByUid(query.id)
-      const donationCount = 3//await this.donationService.getDonationCount(query.id)
+      const donationCount = await this.donationRecieverService.getDonationCount(query.id)
 
       return {
           data: {
               ...data,
-              donationCount,
+              donationCount: donationCount.count,
           },
           canMakeDonate: (req.user.stripeCustomerId || '').length > 0
       }

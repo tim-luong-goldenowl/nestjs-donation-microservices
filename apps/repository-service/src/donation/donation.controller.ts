@@ -1,32 +1,31 @@
-import { Body, Controller, Post, Req } from '@nestjs/common';
-import { DonationDto } from './donation.dto';
+import { Controller } from '@nestjs/common';
 import { DonationService } from './donation.service';
-import { CreateDonationService } from './create-donation.service';
+import { Observable } from 'rxjs';
+import { DonationRepositoryServiceController, DonationRepositoryServiceControllerMethods } from '@app/common/types/repositoryService';
+import { CreateDonationRequest, CreateDonationResponse, GetDonationCountByDrIdRequest, GetDonationCountByDrIdResponse } from '@app/common/types/donation';
 
 @Controller()
-export class DonationController {
-    constructor(
-        private donationService: DonationService,
-        private createDonationService: CreateDonationService
-    ) { }
+@DonationRepositoryServiceControllerMethods()
+export class DonationController implements DonationRepositoryServiceController {
+  constructor(
+    private donationService: DonationService,
+  ) {}
 
-    @Post()
-    async createDonation(@Body() params: DonationDto, @Req() req) {
-        const donation = await this.createDonationService.create(params, req.user)
-        const donationCount = await this.donationService.getDonationCount(params.donationReceiverId)
+  createDonation(
+    request: CreateDonationRequest,
+  ):
+    | CreateDonationResponse
+    | Promise<CreateDonationResponse>
+    | Observable<CreateDonationResponse> {
+    return this.donationService.createDonation(request);
+  }
 
-        if (donation) {
-            return {
-                success: true,
-                data: {
-                    donation,
-                    donationCount
-                }
-            };
-        } else {
-            return {
-                success: false
-            };
-        }
-    }
+  getDonationCountByDrId(
+    request: GetDonationCountByDrIdRequest,
+  ):
+    | GetDonationCountByDrIdResponse
+    | Promise<GetDonationCountByDrIdResponse>
+    | Observable<GetDonationCountByDrIdResponse> {
+    return this.donationService.getDonationCount(request);
+  }
 }

@@ -1,10 +1,8 @@
-import { User } from '@app/common/types';
-import { DonationReceiver } from '@app/common/types/donationReceiver';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import StripeConnectCustomerEntity from '../entities/stripe-connect-customer.entity';
 import { Repository } from 'typeorm';
-import { CreateConnectCustomerRequest, StripeConnectCustomer } from '@app/common/types/repositoryService';
+import { CreateConnectCustomerRequest, FindByUserAndDrRequest, FindByUserAndDrResponse, StripeConnectCustomer } from '@app/common/types/repositoryService';
 
 @Injectable()
 export class StripeConnectCustomersService {
@@ -14,15 +12,26 @@ export class StripeConnectCustomersService {
   ) {}
 
   async findByUserAndDonationReceiver(
-    user: User,
-    donationReceiver: DonationReceiver,
-  ) {
-    return await this.stripeConnectCustomerRepository.findOne({
+    request: FindByUserAndDrRequest
+  ): Promise<FindByUserAndDrResponse> {
+    const result = await this.stripeConnectCustomerRepository.findOne({
       where: {
-        user: { uid: user.uid },
-        donationReceiver: { uid: donationReceiver.uid },
+        user: { uid: request.user.uid },
+        donationReceiver: { uid: request.donationReceiver.uid },
       },
     });
+
+    if(result) {
+      return {
+        found: true,
+        stripeConnectCustomer: result
+      }
+    } else {
+      return {
+        found: false,
+        stripeConnectCustomer: null
+      }
+    }
   }
 
   async create(request: CreateConnectCustomerRequest): Promise<StripeConnectCustomer> {
