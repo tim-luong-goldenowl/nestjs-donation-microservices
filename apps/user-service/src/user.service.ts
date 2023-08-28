@@ -5,6 +5,10 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { S3Service } from './s3/s3.service';
+import { CreateCustomerAndCardRequest, CreateCustomerAndCardResponse, GetPaymentMethodRequest, GetPaymentMethodResponse } from '@app/common/types/userService';
+import { InjectStripe } from 'nestjs-stripe';
+import Stripe from 'stripe';
+import { StripeCustomerService } from './stripe/services/customer.service';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -13,7 +17,9 @@ export class UserService implements OnModuleInit {
 
   constructor(
     @Inject(REPOSITORY_SERVICE_CLIENT_NAME) private client: ClientGrpc,
-    private s3Service: S3Service
+    private s3Service: S3Service,
+    @InjectStripe() private readonly stripeClient: Stripe,
+    private stripeCustomerService: StripeCustomerService,
   ) { }
 
 
@@ -44,8 +50,8 @@ export class UserService implements OnModuleInit {
   }
 
   async updateUserProfile(request: UpdateUserProfileRequest): Promise<User> {
-    const user = await lastValueFrom(this.userRepositoryService.findOneById({uid: request.uid}))
-    
+    const user = await lastValueFrom(this.userRepositoryService.findOneById({ uid: request.uid }))
+
     const oldAvatarUrl = user.avatarUrl
     const newAvatar = request.avatar
 
@@ -61,5 +67,54 @@ export class UserService implements OnModuleInit {
     }
 
     return await lastValueFrom(this.userRepositoryService.updateUserProfile(request))
+  }
+
+  async getPaymentMethod(request: GetPaymentMethodRequest): Promise<GetPaymentMethodResponse> {
+    try {
+      const res = await this.stripeClient.customers.listSources(request.stripeCustomerId, {
+        object: 'card',
+        limit: 1
+      })
+
+      const firstPaymentMethod: any = res.data.at(0)
+
+      return {
+        success: true,
+        last4: firstPaymentMethod.last4,
+        brand: firstPaymentMethod.brand,
+        country: firstPaymentMethod.country,
+        expMonth: firstPaymentMethod.exp_month,
+        expYear: firstPaymentMethod.exp_year,
+      }
+    } catch (e) {
+      return {
+        success: false
+      }
+    }
+  }
+
+  async createCustomerAndCard(request: CreateCustomerAndCardRequest): Promise<CreateCustomerAndCardResponse> {
+    try {
+      const user = request.user
+
+      let stripeCustomerId = request.user.stripeCustomerId
+
+      if (!stripeCustomerId) {
+        stripeCustomerId = await this.stripeCustomerService.createCustomer(user)
+        await lastValueFrom(this.userRepositoryService.updateUserStripeCustomerId({ uid: user.uid, stripeCustomerId }))
+      }
+
+      await this.stripeClient.customers.createSource(stripeCustomerId, {
+        source: request.cardToken
+      })
+
+      return {
+        success: true
+      }
+    } catch (error) {
+      return {
+        success: false
+      }
+    }
   }
 }

@@ -3,12 +3,12 @@ import User from './user.entity';
 import DonationReceiver from './donation-receiver.entity';
 import { v4 as uuidv4 } from 'uuid';
 
-@Entity()
-class Donation {
+@Entity('donation')
+class DonationEntity {
     @Index()
     @PrimaryGeneratedColumn("uuid")
     public uid: string;
-    
+
     @Column()
     public message: string;
 
@@ -22,4 +22,4 @@ class Donation {
     public donationReceiver: DonationReceiver
 }
 
-export default Donation;
+export default DonationEntity;

@@ -17,11 +17,11 @@ message GetPaymentMethodRequest {
 
 message GetPaymentMethodResponse {
     bool success = 1;
-    string last4 = 2;
-    string brand = 3;
-    string country = 4;
-    string expMonth = 5;
-    string expYear = 6;
+    optional string last4 = 2;
+    optional string brand = 3;
+    optional string country = 4;
+    optional string expMonth = 5;
+    optional string expYear = 6;
 }
 
 message CreateCustomerAndCardRequest {

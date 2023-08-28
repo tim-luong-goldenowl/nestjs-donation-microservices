@@ -9,7 +9,7 @@ import { lastValueFrom } from 'rxjs';
 import { GetUserProfilesResponse, UpdateUserProfileRequest, User } from '@app/common/types/user';
 import { UserRepositoryServiceClient } from '@app/common/types/repositoryService';
 import { REPOSITORY_SERVICE_CLIENT_NAME, USERS_REPOSITORY_SERVICE_NAME, USER_SERVICE_CLIENT_NAME } from '@app/common/constants';
-import { USERS_SERVICE_NAME, UsersServiceClient } from '@app/common/types/userService';
+import { CreateCustomerAndCardRequest, CreateCustomerAndCardResponse, GetPaymentMethodRequest, GetPaymentMethodResponse, USERS_SERVICE_NAME, UsersServiceClient } from '@app/common/types/userService';
 import { UpdateUserProfileDto } from './dtos/update-user-profile.dto';
 
 @Injectable()
@@ -31,23 +31,26 @@ export class UsersService implements OnModuleInit {
   }
 
   async createUser(params: UserRegistrationParamsDto): Promise<User> {
-    const user = await lastValueFrom(this.userRepositoryService.createUser(params));
-
-    return user;
+    return await lastValueFrom(this.userRepositoryService.createUser(params));
   }
 
   async findOneById(uid: string): Promise<User> {
-    const user = await lastValueFrom(this.userRepositoryService.findOneById({ uid }));
-
-    return user;
+    return await lastValueFrom(this.userRepositoryService.findOneById({ uid }));
   }
 
   async getProfiles(uid: string): Promise<GetUserProfilesResponse> {
-      return await lastValueFrom(this.userService.getProfiles({uid}))
+    return await lastValueFrom(this.userService.getProfiles({uid}))
   }
 
   async updateUser(params: UpdateUserProfileDto, avatar: Express.Multer.File): Promise<User> {
-    console.log("@@@@params", params)
     return await lastValueFrom(this.userService.updateUserProfile({...params, avatar: avatar}))
+  }
+
+  async getPaymentMethod(request: GetPaymentMethodRequest): Promise<GetPaymentMethodResponse> {
+    return await lastValueFrom(this.userService.getPaymentMethod(request))
+  }
+
+  async createCustomerAndCard(request: CreateCustomerAndCardRequest): Promise<CreateCustomerAndCardResponse> {
+    return await lastValueFrom(this.userService.createCustomerAndCard(request))
   }
 }

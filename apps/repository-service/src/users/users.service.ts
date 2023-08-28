@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import UserEntity from '../entities/user.entity';
 import { CreateUserDto, UpdateUserProfileRequest, User } from '@app/common/types/user';
-import { v4 as uuidv4 } from 'uuid';
-import { UpdateProfileRequest } from '@app/common/types/donationReceiver';
+import { UpdateUserStripeCustomerIdRequest } from '@app/common/types/repositoryService';
 
 @Injectable()
 export class UsersService {
@@ -45,7 +44,16 @@ export class UsersService {
     })
 
     return this.userMapper(user)
-}
+  }
+
+  async updateStripeCustomerId(request: UpdateUserStripeCustomerIdRequest): Promise<User> {
+    const user = await this.userRepository.save({
+      uid: request.uid,
+      ...request
+    })
+
+    return this.userMapper(user)
+  }
 
 
   private userMapper(user: UserEntity): User {

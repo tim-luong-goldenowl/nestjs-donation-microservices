@@ -13,6 +13,33 @@ import {
 
 export const protobufPackage = "donationReceiverService";
 
+export interface User {
+  uid: string;
+  firstName: string;
+  lastName: string;
+  dob: string;
+  address: string;
+  stripeCustomerId: string;
+  avatarUrl: string;
+  email: string;
+  password: string;
+}
+
+export interface CreateDonationRequest {
+  message: string;
+  value: number;
+  donationReceiverUid: string;
+  user: User | undefined;
+}
+
+export interface Donation {
+  message: string;
+  value: number;
+  uid: string;
+  userUid: string;
+  donationReceiverUid: string;
+}
+
 export const DONATION_RECEIVER_SERVICE_PACKAGE_NAME = "donationReceiverService";
 
 export interface DonationReceiversServiceClient {
@@ -57,3 +84,28 @@ export function DonationReceiversServiceControllerMethods() {
 }
 
 export const DONATION_RECEIVERS_SERVICE_NAME = "DonationReceiversService";
+
+export interface DonationsServiceClient {
+  createDonation(request: CreateDonationRequest): Observable<Donation>;
+}
+
+export interface DonationsServiceController {
+  createDonation(request: CreateDonationRequest): Promise<Donation> | Observable<Donation> | Donation;
+}
+
+export function DonationsServiceControllerMethods() {
+  return function (constructor: Function) {
+    const grpcMethods: string[] = ["createDonation"];
+    for (const method of grpcMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("DonationsService", method)(constructor.prototype[method], method, descriptor);
+    }
+    const grpcStreamMethods: string[] = [];
+    for (const method of grpcStreamMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("DonationsService", method)(constructor.prototype[method], method, descriptor);
+    }
+  };
+}
+
+export const DONATIONS_SERVICE_NAME = "DonationsService";

@@ -34,24 +34,25 @@ export class UsersController {
         return user;
     }
 
-    // @Get('/get-payment-method')
-    // async getPaymentMethod(@Req() req) {
-    //     const paymentMethod = await lastValueFrom(this.stripeMicroserviceClient.send(STRIPE_MICROSERVICE_GET_CUSTOMER_CARD_MESSAGE, { user: req.user }))
-    //     return paymentMethod
-    // }
+    @Get('/get-payment-method')
+    async getPaymentMethod(@Req() req) {
+        const paymentMethod = await this.userService.getPaymentMethod({stripeCustomerId: req.user.stripeCustomerId})
 
-    // @Post('/create-customer-card')
-    // async createCustomerCard(@Body() params, @Req() req) {
-    //     const result = await this.userStripeCustomerService.createCustomerAndCard(params.cardToken, req.user)
+        return paymentMethod
+    }
 
-    //     if (result) {
-    //         return {
-    //             success: true
-    //         }
-    //     } else {
-    //         return {
-    //             success: false
-    //         }
-    //     }
-    // }
+    @Post('/create-customer-card')
+    async createCustomerCard(@Body() params, @Req() req) {
+        const result = await this.userService.createCustomerAndCard({user: req.user, cardToken: params.cardToken})
+
+        if (result) {
+            return {
+                success: true
+            }
+        } else {
+            return {
+                success: false
+            }
+        }
+    }
 }

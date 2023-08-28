@@ -11,7 +11,7 @@ import { REPOSITORY_SERVICE_CLIENT_NAME } from '@app/common/constants';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
-    private usersService: UserRepositoryServiceClient;
+    private userRepositoryService: UserRepositoryServiceClient;
 
     constructor(
         private jwtService: JwtService,
@@ -19,12 +19,12 @@ export class AuthService implements OnModuleInit {
     ) { }
 
     onModuleInit() {
-        this.usersService =
+        this.userRepositoryService =
             this.client.getService<UserRepositoryServiceClient>(USER_REPOSITORY_SERVICE_NAME);
     }
 
     async validateUser(params: UserSigninParamsDto): Promise<any> {
-        const user = await lastValueFrom(this.usersService.findOneByEmail({ email: params.email }))
+        const user = await lastValueFrom(this.userRepositoryService.findOneByEmail({ email: params.email }))
 
         if (!user) {
             throw new HttpException('User does not exist!', HttpStatus.BAD_REQUEST)

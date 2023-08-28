@@ -11,11 +11,11 @@ export interface GetPaymentMethodRequest {
 
 export interface GetPaymentMethodResponse {
   success: boolean;
-  last4: string;
-  brand: string;
-  country: string;
-  expMonth: string;
-  expYear: string;
+  last4?: string | undefined;
+  brand?: string | undefined;
+  country?: string | undefined;
+  expMonth?: string | undefined;
+  expYear?: string | undefined;
 }
 
 export interface CreateCustomerAndCardRequest {

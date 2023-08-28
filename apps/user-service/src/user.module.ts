@@ -6,6 +6,7 @@ import { REPOSITORY_SERVICE_CLIENT_NAME } from '@app/common/constants';
 import { REPOSITORY_SERVICE_PACKAGE_NAME } from '@app/common/types/repositoryService';
 import { join } from 'path';
 import { S3Module } from './s3/s3.module';
+import { StripeUltilsModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { S3Module } from './s3/s3.module';
         },
       },
     ]),
-    S3Module
+    S3Module,
+    StripeUltilsModule
   ],
   controllers: [UserController],
   providers: [UserService],

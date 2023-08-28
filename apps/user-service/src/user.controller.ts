@@ -11,11 +11,11 @@ export class UserController implements UsersServiceController {
   constructor(private readonly userService: UserService) { }
 
   createCustomerAndCard(request: CreateCustomerAndCardRequest): CreateCustomerAndCardResponse | Promise<CreateCustomerAndCardResponse> | Observable<CreateCustomerAndCardResponse> {
-    return
+    return this.userService.createCustomerAndCard(request)
   }
 
   getPaymentMethod(request: GetPaymentMethodRequest): GetPaymentMethodResponse | Promise<GetPaymentMethodResponse> | Observable<GetPaymentMethodResponse> {
-    return
+    return this.userService.getPaymentMethod(request)
   }
 
   getProfiles(request: GetUserProfilesRequest): GetUserProfilesResponse | Promise<GetUserProfilesResponse> | Observable<GetUserProfilesResponse> {
