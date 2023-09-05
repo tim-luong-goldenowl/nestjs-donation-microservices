@@ -8,6 +8,7 @@ import { join } from 'path';
 import { DONATION_RECEIVER_SERVICE_PACKAGE_NAME } from '@app/common/types/donationReceiverService';
 import DonationEntity from '../entities/donation.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { getServiceUrlByServiceName } from '@app/common/serviceUrlUltils';
 
 @Module({
   controllers: [DonationController],
@@ -19,7 +20,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         transport: Transport.GRPC,
         options: {
           package: REPOSITORY_SERVICE_PACKAGE_NAME,
-          protoPath: join(process.cwd(), './proto/repositoryService.proto')
+          protoPath: join(process.cwd(), './proto/repositoryService.proto'),
+          url: getServiceUrlByServiceName(REPOSITORY_SERVICE_CLIENT_NAME)
         },
       },
       {
@@ -28,7 +30,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         options: {
           package: DONATION_RECEIVER_SERVICE_PACKAGE_NAME,
           protoPath: join(process.cwd(), './proto/donationReceiverService.proto'),
-          url: 'localhost:3005'
+          url: getServiceUrlByServiceName(DONATION_RECEIVER_SERVICE_CLIENT_NAME)
         },
       },
     ]),

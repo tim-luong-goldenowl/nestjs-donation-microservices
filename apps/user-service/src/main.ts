@@ -3,6 +3,8 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { UserServiceModule } from './user.module';
 import { USER_SERVICE_PACKAGE_NAME } from '@app/common/types/userService';
+import { USER_SERVICE_CLIENT_NAME } from '@app/common/constants';
+import { getServiceUrlByServiceName } from '@app/common/serviceUrlUltils';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -12,7 +14,7 @@ async function bootstrap() {
       options: {
         protoPath: join(process.cwd(), './proto/userService.proto'),
         package: USER_SERVICE_PACKAGE_NAME,
-        url: 'localhost:3006'
+        url: getServiceUrlByServiceName(USER_SERVICE_CLIENT_NAME)
       },
     },
   );

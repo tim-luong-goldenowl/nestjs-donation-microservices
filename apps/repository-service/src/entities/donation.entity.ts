@@ -1,7 +1,6 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import User from './user.entity';
 import DonationReceiver from './donation-receiver.entity';
-import { v4 as uuidv4 } from 'uuid';
 
 @Entity('donation')
 class DonationEntity {

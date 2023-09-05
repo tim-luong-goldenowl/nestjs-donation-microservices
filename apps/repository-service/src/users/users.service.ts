@@ -38,11 +38,10 @@ export class UsersService {
   }
 
   async updateProfile(params: UpdateUserProfileRequest): Promise<User> {
-    console.log("@@@@@@@@@@@@@@@params", params)
-
     const user = await this.userRepository.save({
         uid: params.uid,
-        ...params
+        ...params,
+        dob: new Date(params.dob)
     })
 
     return this.userMapper(user)

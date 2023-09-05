@@ -16,6 +16,7 @@ import { MailerJobConsumer } from './job-consumers/mailer-job.consumer';
 import { MailModule } from './mail/mail.module';
 import { DonationService } from './donation-service.service';
 import { DonationServiceController } from './donation-service.controller';
+import { getServiceUrlByServiceName } from '@app/common/serviceUrlUltils';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { DonationServiceController } from './donation-service.controller';
         options: {
           package: REPOSITORY_SERVICE_PACKAGE_NAME,
           protoPath: join(process.cwd(), './proto/repositoryService.proto'),
+          url: getServiceUrlByServiceName(REPOSITORY_SERVICE_CLIENT_NAME)
         },
       },
     ]),

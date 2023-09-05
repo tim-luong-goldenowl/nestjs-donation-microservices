@@ -8,6 +8,7 @@ import { join } from 'path';
 import { S3Module } from './s3/s3.module';
 import { StripeUltilsModule } from './stripe/stripe.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { getServiceUrlByServiceName } from '@app/common/serviceUrlUltils';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         options: {
           package: REPOSITORY_SERVICE_PACKAGE_NAME,
           protoPath: join(process.cwd(), './proto/repositoryService.proto'),
+          url: getServiceUrlByServiceName(REPOSITORY_SERVICE_CLIENT_NAME)
         },
       },
     ]),

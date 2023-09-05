@@ -57,7 +57,7 @@ export class UserService implements OnModuleInit {
 
     if (newAvatar) {
       if (oldAvatarUrl) {
-        const oldAvatarFileName = oldAvatarUrl[oldAvatarUrl.length - 1]
+        const oldAvatarFileName = oldAvatarUrl.split('/')[3]
         const uploadFileUrl = await this.s3Service.replaceObject(newAvatar, oldAvatarFileName)
         request.avatarUrl = uploadFileUrl
       } else {

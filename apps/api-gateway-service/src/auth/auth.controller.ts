@@ -28,7 +28,6 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('sign-in')
     async signIn(@Request() req, @Response() res) {
-        console.log("@@@@useeeee", req.user)
         const jwtToken = await this.authService.login(req.user);
 
         res.cookie('token', jwtToken, {

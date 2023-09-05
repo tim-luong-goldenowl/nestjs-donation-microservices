@@ -16,11 +16,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { DonationReceiverRegistrationDto } from './dtos/donation-receiver-registration.dto';
 import { plainToInstance } from 'class-transformer';
 import { Public } from '../auth/auth.decorator';
+import { DonationService } from '../donation/donation.service';
 
 @Controller('donation-receivers')
 export class DonationReceiversController {
   constructor(
     private donationRecieverService: DonationReceiversService,
+    private donationService: DonationService
   ) { }
 
   @Get()
@@ -76,7 +78,7 @@ export class DonationReceiversController {
   @Get('/:id')
   async getById(@Param() query, @Req() req) {
       const data = await this.donationRecieverService.getByUid(query.id)
-      const donationCount = await this.donationRecieverService.getDonationCount(query.id)
+      const donationCount = await this.donationService.getDonationCount({donationReceiverUid: query.id})
 
       return {
           data: {

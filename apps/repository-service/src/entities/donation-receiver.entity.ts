@@ -2,7 +2,6 @@ import { Column, Entity, Index, JoinColumn, OneToMany, OneToOne, PrimaryColumn, 
 import User from './user.entity';
 import StripeConnectCustomer from './stripe-connect-customer.entity';
 import Donation from './donation.entity';
-import { v4 as uuidv4 } from 'uuid';
 
 @Entity("donation_receiver")
 class DonationReceiverEntity {

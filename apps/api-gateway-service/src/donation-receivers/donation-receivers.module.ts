@@ -6,10 +6,12 @@ import { join } from 'path';
 import { REPOSITORY_SERVICE_PACKAGE_NAME } from '@app/common/types/repositoryService';
 import { DONATION_RECEIVER_SERVICE_CLIENT_NAME, REPOSITORY_SERVICE_CLIENT_NAME } from '@app/common/constants';
 import { DONATION_RECEIVER_SERVICE_PACKAGE_NAME } from '@app/common/types/donationReceiverService';
+import { getServiceUrlByServiceName } from '@app/common/serviceUrlUltils';
+import { DonationService } from '../donation/donation.service';
 
 @Module({
   controllers: [DonationReceiversController],
-  providers: [DonationReceiversService],
+  providers: [DonationReceiversService, DonationService],
   imports: [
     ClientsModule.register([
       {
@@ -17,7 +19,8 @@ import { DONATION_RECEIVER_SERVICE_PACKAGE_NAME } from '@app/common/types/donati
         transport: Transport.GRPC,
         options: {
           package: REPOSITORY_SERVICE_PACKAGE_NAME,
-          protoPath: join(process.cwd(), './proto/repositoryService.proto')
+          protoPath: join(process.cwd(), './proto/repositoryService.proto'),
+          url: getServiceUrlByServiceName(REPOSITORY_SERVICE_CLIENT_NAME)
         },
       },
       {
@@ -26,7 +29,7 @@ import { DONATION_RECEIVER_SERVICE_PACKAGE_NAME } from '@app/common/types/donati
         options: {
           package: DONATION_RECEIVER_SERVICE_PACKAGE_NAME,
           protoPath: join(process.cwd(), './proto/donationReceiverService.proto'),
-          url: 'localhost:3005'
+          url: getServiceUrlByServiceName(DONATION_RECEIVER_SERVICE_CLIENT_NAME)
         },
       },
     ])

@@ -3,14 +3,13 @@ import { Column, Entity, Index, JoinColumn, OneToMany, OneToOne, PrimaryColumn, 
 import DonationReceiver from './donation-receiver.entity';
 import Donation from './donation.entity';
 import StripeConnectCustomer from './stripe-connect-customer.entity';
-import { v4 as uuidv4 } from 'uuid';
 
 @Entity("user")
 class UserEntity {
   @Index()
   @PrimaryGeneratedColumn("uuid")
   public uid: string;
-  
+
   @Column()
   public firstName: string;
 

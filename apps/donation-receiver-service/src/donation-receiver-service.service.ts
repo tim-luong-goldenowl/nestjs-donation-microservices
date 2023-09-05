@@ -50,7 +50,7 @@ export class DonationReceiverServiceService implements OnModuleInit {
       const oldAvatarUrl = donationReceiver.avatarUrl;
 
       if (oldAvatarUrl) {
-        const oldAvatarFileName = oldAvatarUrl[oldAvatarUrl.length - 1]
+        const oldAvatarFileName = oldAvatarUrl.split('/')[3]
         const uploadedFileUrl = await this.s3Service.replaceObject(avatar, oldAvatarFileName)
         request.avatarUrl = uploadedFileUrl
       } else {
@@ -67,9 +67,8 @@ export class DonationReceiverServiceService implements OnModuleInit {
 
     const donationReceiver = findOneResult.donationReceiver
 
-    console.log("donationReceiverdonationReceiver", donationReceiver)
     const onboardingCompleteToken = randomBytes(20).toString('hex')
-    const returnUrl = `http://localhost:3001/users/completed-dr-registration/${onboardingCompleteToken}`
+    const returnUrl = `http://localhost:8080/users/completed-dr-registration/${onboardingCompleteToken}`
 
     const connectedAccountResult: CreateConnectedAccountResponse = await this.stripeConnectService.createConnectedAccount(donationReceiver, { returnUrl })
 

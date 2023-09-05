@@ -6,6 +6,7 @@ import { REPOSITORY_SERVICE_CLIENT_NAME, USER_SERVICE_CLIENT_NAME } from '@app/c
 import { REPOSITORY_SERVICE_PACKAGE_NAME } from '@app/common/types/repositoryService';
 import { join } from 'path';
 import { USER_SERVICE_PACKAGE_NAME } from '@app/common/types/userService';
+import { getServiceUrlByServiceName } from '@app/common/serviceUrlUltils';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { USER_SERVICE_PACKAGE_NAME } from '@app/common/types/userService';
         options: {
           package: REPOSITORY_SERVICE_PACKAGE_NAME,
           protoPath: join(process.cwd(), './proto/repositoryService.proto'),
+          url: getServiceUrlByServiceName(REPOSITORY_SERVICE_CLIENT_NAME)
         },
       },
       {
@@ -24,7 +26,7 @@ import { USER_SERVICE_PACKAGE_NAME } from '@app/common/types/userService';
         options: {
           package: USER_SERVICE_PACKAGE_NAME,
           protoPath: join(process.cwd(), './proto/userService.proto'),
-          url: 'localhost:3006'
+          url: getServiceUrlByServiceName(USER_SERVICE_CLIENT_NAME)
         },
       },
     ]),
